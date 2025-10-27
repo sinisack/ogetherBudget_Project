@@ -6,8 +6,6 @@ import TransactionsTable from './components/TransactionsTable'
 import BudgetBar from './components/BudgetBar'
 import Charts from './components/Charts'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
 export default function App() {
   const [transactions, setTransactions] = useState([])
   const [budget, setBudget] = useState({ amount: 0 })
@@ -21,22 +19,23 @@ export default function App() {
   //   setTransactions(tx)
   //   setBudget(bg)
   // }
+
   const fetchAll = async () => {
-  try {
-    const tx = await http.get(`${BASE_URL}/transactions`).then(r => r.data)
-    setTransactions(tx)
-  } catch (e) {
-    console.error('GET /api/transactions 실패', e)
-    alert('거래 조회 실패 (/transactions)')
+    try {
+      const tx = await http.get(`/api/transactions`).then(r => r.data)
+      setTransactions(tx)
+    } catch (e) {
+      console.error('GET /api/transactions 실패', e)
+      alert('거래 조회 실패 (/transactions)')
+    }
+    try {
+      const bg = await http.get(`/api/budget/current`).then(r => r.data)
+      setBudget(bg)
+    } catch (e) {
+      console.error('GET /api/budget/current 실패', e)
+      alert('예산 조회 실패 (/budget/current)')
+    }
   }
-  try {
-    const bg = await http.get(`${BASE_URL}/budget/current`).then(r => r.data)
-    setBudget(bg)
-  } catch (e) {
-    console.error('GET /api/budget/current 실패', e)
-    alert('예산 조회 실패 (/budget/current)')
-  }
-}
 
 
   useEffect(() => {
@@ -67,8 +66,10 @@ export default function App() {
 
       {toast && (
         <div role="alert"
-             style={{ position: 'fixed', right: 24, bottom: 24, background: '#222', color: '#fff',
-                      padding: '12px 16px', borderRadius: 8 }}>
+          style={{
+            position: 'fixed', right: 24, bottom: 24, background: '#222', color: '#fff',
+            padding: '12px 16px', borderRadius: 8
+          }}>
           {toast}
         </div>
       )}
