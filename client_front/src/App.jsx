@@ -22,17 +22,17 @@ export default function App() {
 
   const fetchAll = async () => {
     try {
-      const tx = await http.get(`/api/transactions`).then(r => r.data)
+      const tx = await http.get(`/transactions`).then(r => r.data)
       setTransactions(tx)
     } catch (e) {
-      console.error('GET /api/transactions 실패', e)
+      console.error('GET /transactions 실패', e)
       alert('거래 조회 실패 (/transactions)')
     }
     try {
-      const bg = await http.get(`/api/budget/current`).then(r => r.data)
+      const bg = await http.get(`/budget/current`).then(r => r.data)
       setBudget(bg)
     } catch (e) {
-      console.error('GET /api/budget/current 실패', e)
+      console.error('GET /budget/current 실패', e)
       alert('예산 조회 실패 (/budget/current)')
     }
   }
