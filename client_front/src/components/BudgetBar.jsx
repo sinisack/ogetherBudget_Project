@@ -1,5 +1,6 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import http from '../api/http'
+import './BudgetBar.css'
 
 export default function BudgetBar({ budget, transactions, onUpdated }) {
   const [amount, setAmount] = useState(budget?.amount || 0)
@@ -19,17 +20,26 @@ export default function BudgetBar({ budget, transactions, onUpdated }) {
   }
 
   return (
-    <div style={{ margin: '12px 0' }}>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+    <div className="budget-bar">
+      <div className="budget-bar-top">
         <b>월 예산</b>
-        <input type="number" value={amount} onChange={e => setAmount(e.target.value)} style={{ width: 160 }} />
-        <button onClick={save}>저장</button>
-        <span style={{ marginLeft: 'auto' }}>
+        <input
+          type="number"
+          value={amount}
+          onChange={e => setAmount(e.target.value)}
+          className="budget-input"
+        />
+        <button className="primary" onClick={save}>저장</button>
+        <span className="budget-summary">
           사용 {spent.toLocaleString()} / {Number(budget?.amount || 0).toLocaleString()} ({ratio}%)
         </span>
       </div>
-      <div style={{ height: 10, background: '#eee', borderRadius: 6, overflow: 'hidden', marginTop: 6 }}>
-        <div style={{ width: `${ratio}%`, height: '100%', background: ratio >= 80 ? '#e74c3c' : '#2ecc71' }} />
+
+      <div className="budget-progress">
+        <div
+          className={`budget-progress-bar ${ratio >= 80 ? 'danger' : 'safe'}`}
+          style={{ width: `${ratio}%` }}
+        />
       </div>
     </div>
   )

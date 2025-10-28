@@ -1,0 +1,42 @@
+.budget-bar {
+    background-color: var(--color-bg-secondary);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.budget-bar-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.budget-input {
+    width: 140px;
+}
+
+.budget-summary {
+    margin-left: auto;
+    color: var(--color-text-secondary);
+}
+
+.budget-progress {
+    height: 10px;
+    background: #2a2a2a;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.budget-progress-bar {
+    height: 100%;
+    transition: width 0.3s ease;
+}
+
+.budget-progress-bar.safe {
+    background: var(--color-success);
+}
+
+.budget-progress-bar.danger {
+    background: var(--color-danger);
+}

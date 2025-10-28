@@ -1,24 +1,30 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import http from './api/http'
 import { connectWS, onTransactionsUpdated, onAlert } from './api/ws'
 import TransactionForm from './components/TransactionForm'
 import TransactionsTable from './components/TransactionsTable'
 import BudgetBar from './components/BudgetBar'
 import Charts from './components/Charts'
+import LiveFeed from './components/LiveFeed'
+import './App.css'
+
+const showDesktopNotification = (title, body) => {
+  if (Notification.permission === 'granted') {
+    new Notification(title, { body, icon: '/icon.png' })
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        new Notification(title, { body, icon: '/icon.png' })
+      }
+    })
+  }
+}
 
 export default function App() {
   const [transactions, setTransactions] = useState([])
   const [budget, setBudget] = useState({ amount: 0 })
   const [toast, setToast] = useState(null)
-
-  // const fetchAll = async () => {
-  //   const [tx, bg] = await Promise.all([
-  //     http.get(`${BASE_URL}/transactions`).then(r => r.data),
-  //     http.get(`${BASE_URL}/budget/current`).then(r => r.data),
-  //   ])
-  //   setTransactions(tx)
-  //   setBudget(bg)
-  // }
+  const [feedItems, setFeedItems] = useState([])
 
   const fetchAll = async () => {
     try {
@@ -37,12 +43,22 @@ export default function App() {
     }
   }
 
-
   useEffect(() => {
     connectWS()
     fetchAll()
-    const off1 = onTransactionsUpdated(() => fetchAll())
-    const off2 = onAlert((msg) => { setToast(msg); setTimeout(() => setToast(null), 4000) })
+
+    const off1 = onTransactionsUpdated((updateMessage) => {
+      fetchAll()
+      if (updateMessage) {
+        setFeedItems(prev => [updateMessage, ...prev].slice(0, 10))
+      }
+    })
+
+    const off2 = onAlert((msg) => {
+      setToast(msg)
+      setTimeout(() => setToast(null), 4000)
+      showDesktopNotification('💰 예산 알림', msg)
+    })
     return () => { off1(); off2() }
   }, [])
 
@@ -52,24 +68,43 @@ export default function App() {
   )
 
   return (
-    <div className="container" style={{ maxWidth: 980, margin: '24px auto', padding: 16 }}>
-      <h1>실시간 가계부</h1>
-      <p>현재 잔액: <b>{balance.toLocaleString()}</b></p>
+    <div className="dashboard-container">
+      <header className="dashboard-header">
+        <h1 className="dashboard-title">실시간 가계부</h1>
+        <p className="dashboard-balance">
+          현재 잔액:{" "}
+          <b className={balance >= 0 ? "balance-positive" : "balance-negative"}>
+            {balance.toLocaleString()} 원
+          </b>
+        </p>
+      </header>
 
-      <BudgetBar budget={budget} transactions={transactions} onUpdated={fetchAll} />
-      <TransactionForm onSaved={fetchAll} />
+      <div className="top-grid">
+        <BudgetBar budget={budget} transactions={transactions} onUpdated={fetchAll} />
+      </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 16, marginTop: 16 }}>
+      <section className="form-section">
+        <TransactionForm onSaved={fetchAll} />
+      </section>
+
+      <section className="transactions-section">
+        <h2>거래 내역</h2>
         <TransactionsTable items={transactions} onChanged={fetchAll} />
-        <Charts items={transactions} />
+      </section>
+
+      <div className="bottom-grid">
+        <section className="charts-section">
+          <h2>데이터 분석</h2>
+          <Charts items={transactions} />
+        </section>
+
+        <section className="feed-section">
+          <LiveFeed items={feedItems} />
+        </section>
       </div>
 
       {toast && (
-        <div role="alert"
-          style={{
-            position: 'fixed', right: 24, bottom: 24, background: '#222', color: '#fff',
-            padding: '12px 16px', borderRadius: 8
-          }}>
+        <div role="alert" className="toast">
           {toast}
         </div>
       )}
