@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import http from './api/http'
 import { connectWS, onTransactionsUpdated, onAlert } from './api/ws'
 import TransactionForm from './components/TransactionForm'
@@ -6,6 +6,7 @@ import TransactionsTable from './components/TransactionsTable'
 import BudgetBar from './components/BudgetBar'
 import Charts from './components/Charts'
 import LiveFeed from './components/LiveFeed'
+import CsvManagement from './components/CsvManagement'
 import './App.css'
 
 const showDesktopNotification = (title, body) => {
@@ -25,6 +26,7 @@ export default function App() {
   const [budget, setBudget] = useState({ amount: 0 })
   const [toast, setToast] = useState(null)
   const [feedItems, setFeedItems] = useState([])
+  const formOpenRef = useRef(null)
 
   const fetchAll = async () => {
     try {
@@ -67,6 +69,20 @@ export default function App() {
     [transactions]
   )
 
+  const recentItems = useMemo(() => {
+    const seen = new Set()
+    const list = []
+    for (let i = transactions.length - 1; i >= 0 && list.length < 5; i--) {
+      const desc = transactions[i].description || transactions[i].memo || transactions[i].category || ''
+      if (!desc) continue
+      if (!seen.has(desc)) {
+        seen.add(desc)
+        list.push(desc)
+      }
+    }
+    return list
+  }, [transactions])
+
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
@@ -84,17 +100,29 @@ export default function App() {
       </div>
 
       <section className="form-section">
-        <TransactionForm onSaved={fetchAll} />
+        <TransactionForm
+          ref={formOpenRef}
+          onSaved={fetchAll}
+          recentItems={recentItems}
+        />
+        <div style={{ marginTop: 12 }}>
+        </div>
+
+        <CsvManagement
+          transactions={transactions}
+          onImportComplete={fetchAll}
+          setToast={setToast}
+        />
       </section>
 
       <section className="transactions-section">
-        <h2>거래 내역</h2>
+        <h2>거래 내역 📝</h2>
         <TransactionsTable items={transactions} onChanged={fetchAll} />
       </section>
 
       <div className="bottom-grid">
         <section className="charts-section">
-          <h2>데이터 분석</h2>
+          <h2>데이터 분석 📈</h2>
           <Charts items={transactions} />
         </section>
 
