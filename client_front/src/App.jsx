@@ -27,6 +27,16 @@ export default function App() {
   const [toast, setToast] = useState(null)
   const [feedItems, setFeedItems] = useState([])
   const formOpenRef = useRef(null)
+  const [search, setSearch] = useState('')
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return transactions
+    return transactions.filter(t =>
+      (t.memo && t.memo.includes(search)) ||
+      (t.category && t.category.includes(search))
+    )
+  }, [transactions, search])
+
 
   const fetchAll = async () => {
     try {
@@ -116,13 +126,20 @@ export default function App() {
       </section>
 
       <section className="transactions-section">
-        <h2>거래 내역 📝</h2>
-        <TransactionsTable items={transactions} onChanged={fetchAll} />
+        <h2>거래 내역</h2>
+        <input
+          type="text"
+          placeholder="검색 (메모, 카테고리 등)"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ padding: 6, marginBottom: 8, width: '50%' }}
+        />
+        <TransactionsTable items={filtered} onChanged={fetchAll} />
       </section>
 
       <div className="bottom-grid">
         <section className="charts-section">
-          <h2>데이터 분석 📈</h2>
+          <h2>데이터 분석</h2>
           <Charts items={transactions} />
         </section>
 

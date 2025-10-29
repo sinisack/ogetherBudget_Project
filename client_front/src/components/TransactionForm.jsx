@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import http from '../api/http'
 
 export default function TransactionForm({ onSaved }) {
@@ -16,12 +16,21 @@ export default function TransactionForm({ onSaved }) {
     e.preventDefault()
     const payload = { ...form, amount: Number(form.amount) }
     await http.post('/transactions', payload)
-    setForm(f => ({ ...f, amount: 0, memo: '' }))
+    setForm({
+      type: 'EXPENSE',
+      amount: 0,
+      category: 'Misc',
+      memo: '',
+      occurredAt: new Date().toISOString(),
+    })
     onSaved?.()
   }
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 2fr 120px', gap: 8 }}>
+    <form
+      onSubmit={submit}
+      style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 2fr 120px 100px', gap: 8 }}
+    >
       <select name="type" value={form.type} onChange={change}>
         <option value="EXPENSE">지출</option>
         <option value="INCOME">수입</option>

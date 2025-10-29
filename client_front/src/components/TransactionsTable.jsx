@@ -1,4 +1,3 @@
-import React from 'react'
 import http from '../api/http'
 
 export default function TransactionsTable({ items, onChanged }) {
@@ -13,7 +12,7 @@ export default function TransactionsTable({ items, onChanged }) {
           <th align="left">카테고리</th>
           <th align="left">메모</th>
           <th align="right">금액</th>
-          <th></th>
+          <th align="right">관리</th>
         </tr>
       </thead>
       <tbody>
