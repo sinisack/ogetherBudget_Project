@@ -32,10 +32,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework:spring-messaging'
 
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly   'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly   'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 직렬화
+	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 
+
+// --- h2 ---
 	runtimeOnly 'com.h2database:h2'
 // MySQL 전환 시 아래로 교체
-// runtimeOnly 'com.mysql:mysql-connector-j'
+ runtimeOnly 'com.mysql:mysql-connector-j'
 
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

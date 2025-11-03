@@ -11,7 +11,6 @@ import java.time.YearMonth;
 
 @RestController
 @RequestMapping("/api/budget")
-@CrossOrigin(origins = "*")
 public class BudgetRestController {
     private final BudgetService budgetService;
     private final WsEventPublisher ws;

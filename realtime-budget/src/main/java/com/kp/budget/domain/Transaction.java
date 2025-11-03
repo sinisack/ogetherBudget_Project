@@ -1,46 +1,33 @@
 package com.kp.budget.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
+@Getter @Setter
 @Entity
+@Table(name = "transaction")
 public class Transaction {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User owner;
 
     private LocalDateTime occurredAt = LocalDateTime.now();
-
-
-    private String category; // 예: Food, Rent, Transport
-    private String memo; // 메모
-
+    private String category;
+    private String memo;
 
     @Column(precision = 14, scale = 2)
-    private BigDecimal amount; // 양수 금액
-
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tx_type")
-    private Type type = Type.EXPENSE; // EXPENSE | INCOME
-
+    private Type type = Type.EXPENSE;
 
     public enum Type { EXPENSE, INCOME }
-
-
-    // getters/setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public LocalDateTime getOccurredAt() { return occurredAt; }
-    public void setOccurredAt(LocalDateTime occurredAt) { this.occurredAt = occurredAt; }
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
-    public String getMemo() { return memo; }
-    public void setMemo(String memo) { this.memo = memo; }
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
-    public Type getType() { return type; }
-    public void setType(Type type) { this.type = type; }
 }
