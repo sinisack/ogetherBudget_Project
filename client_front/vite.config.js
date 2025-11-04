@@ -1,30 +1,55 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+// import fs from 'fs'; // HTTPS 관련 import 제거
+// import path from 'path'; // HTTPS 관련 import 제거
 
-// 환경 변수 로딩 함수를 추가하여 모드별로 환경 변수를 가져옵니다.
 export default defineConfig(({ mode }) => {
-  // 현재 모드(development 또는 production)에 맞는 환경 변수 로드
   const env = loadEnv(mode, process.cwd(), '');
 
-  // 로컬 개발 환경(npm run dev)일 때만 프록시 서버 설정을 추가합니다.
-  const serverConfig = mode === 'development' 
-    ? {
+  // ⭐️ HTTPS 설정 제거 ⭐️
+  // const certDir = path.resolve(__dirname, 'cert');
+  // const keyPath = path.join(certDir, 'localhost-key.pem');
+  // const certPath = path.join(certDir, 'localhost-cert.pem');
+  // const httpsConfig =
+  //   fs.existsSync(keyPath) && fs.existsSync(certPath)
+  //     ? { key: fs.readFileSync(keyPath), cert: fs.readFileSync(certPath) }
+  //     : true;
+
+  const serverConfig =
+    mode === 'development'
+      ? {
         server: {
+          // ⭐️ HTTPS 설정 제거 ⭐️
+          // https: httpsConfig, 
+          port: 5173,
           proxy: {
-            // 로컬 환경 변수 (.env.development)에 설정된 주소를 사용하도록 수정
-            '/api': env.VITE_API_BASE_URL || 'http://localhost:8080', 
-            '/ws': { 
-              target: env.VITE_API_BASE_URL || 'http://localhost:8080', 
-              ws: true 
-            }
-          }
-        }
+            '/api': {
+              // ⭐️ target을 http로 변경 ⭐️
+              target: env.VITE_API_BASE_URL || 'http://localhost:8080',
+              changeOrigin: true,
+              // ⭐️ secure: false 옵션 제거 (HTTP에서는 무의미) ⭐️
+              // secure: false, 
+              // 쿠키 수동 재작성 로직은 HTTPS 문제 해결용이었으므로 제거하거나 그대로 둘 수 있습니다. 
+              // 문제의 원인을 제거했으므로 제거하는 것을 권장합니다.
+            },
+            '/ws': {
+              // ⭐️ target을 http로 변경 ⭐️
+              target: env.VITE_API_BASE_URL || 'http://localhost:8080',
+              ws: true,
+              changeOrigin: true,
+              // ⭐️ secure: false 옵션 제거 ⭐️
+              // secure: false,
+            },
+          },
+        },
       }
-    : {}; // 프로덕션 환경에서는 server 설정을 제외합니다.
+      : {};
 
   return {
     plugins: [react()],
-    // 개발 환경일 때만 server 설정을 포함합니다.
-    ...serverConfig, 
+    ...serverConfig,
+    build: {
+      outDir: 'dist',
+    },
   };
 });

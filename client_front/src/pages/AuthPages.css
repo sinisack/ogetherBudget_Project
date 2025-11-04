@@ -1,0 +1,104 @@
+/* AuthPages.css */
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #121212; /* 전체 배경색 */
+    color: #F0F0F0; /* 기본 텍스트 색상 */
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+    background-color: #1A1A1A; /* 폼 박스 배경색 */
+    padding: 40px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.auth-title {
+    color: #5DADE2; /* WIZLET 색상 */
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.auth-subtitle {
+    color: #BDBDBD;
+    font-size: 12px;
+    margin-bottom: 30px;
+    line-height: 1.4;
+}
+
+.form-heading {
+    color: #F0F0F0;
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+}
+
+.auth-input {
+    padding: 12px;
+    border: 1px solid #333;
+    background-color: #121212;
+    color: #F0F0F0;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 5px; /* 라벨과의 간격 */
+}
+
+.auth-button {
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.login-btn {
+    background-color: #5DADE2; /* 로그인 버튼 색상 */
+    color: #1A1A1A;
+}
+
+.register-btn {
+    background-color: #5DADE2; /* 회원가입 버튼 색상 */
+    color: #1A1A1A;
+}
+
+.link-area {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.auth-link {
+    color: #5DADE2;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.error-message {
+    color: #E74C3C;
+    font-size: 14px;
+    text-align: center;
+}
+
+.success-message {
+    color: #2ECC71;
+    font-size: 14px;
+    text-align: center;
+}
