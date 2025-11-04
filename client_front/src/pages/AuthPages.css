@@ -1,83 +1,107 @@
-/* AuthPages.css */
+@import url('https://fonts.googleapis.com/css2?family=Trispace:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
+/* ================================
+   🔐 Auth Page Layout
+================================ */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #121212; /* 전체 배경색 */
-    color: #F0F0F0; /* 기본 텍스트 색상 */
+    height: calc(100vh - 120px);
+    overflow: hidden;
+    color: var(--color-text-primary);
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: var(--color-bg-primary);
+    padding: 0 16px;
 }
 
 .auth-box {
     width: 100%;
-    max-width: 400px;
-    background-color: #1A1A1A; /* 폼 박스 배경색 */
-    padding: 40px 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 520px;
+    background-color: var(--color-bg-secondary);
+    padding: 50px 40px;
+    border-radius: 10px;
     text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
+/* ================================
+   ✨ Typography
+================================ */
 .auth-title {
-    color: #5DADE2; /* WIZLET 색상 */
-    font-size: 32px;
+    font-family: 'Trispace', sans-serif;
+    color: var(--color-primary);
+    font-size: 36px;
     font-weight: 700;
-    margin-bottom: 5px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
 }
 
 .auth-subtitle {
-    color: #BDBDBD;
-    font-size: 12px;
-    margin-bottom: 30px;
-    line-height: 1.4;
+    color: var(--color-text-primary);
+    font-size: 13px;
+    margin-bottom: 40px;
+    line-height: 1.6;
 }
 
 .form-heading {
-    color: #F0F0F0;
+    color: var(--color-text-primary);
     font-size: 20px;
+    font-weight: 600;
+    text-align: center;
     margin-bottom: 25px;
-    text-align: left;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
 }
 
+/* ================================
+   🧾 Form
+================================ */
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
     text-align: left;
 }
 
-.auth-input {
-    padding: 12px;
-    border: 1px solid #333;
-    background-color: #121212;
-    color: #F0F0F0;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-top: 5px; /* 라벨과의 간격 */
+.auth-form label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
 }
 
+.auth-input {
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.auth-input:focus {
+    border-color: var(--color-primary);
+    background-color: var(--color-bg-secondary);
+}
+
+/* ================================
+   🔘 Buttons & Links
+================================ */
 .auth-button {
     padding: 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    margin-top: 15px;
+    margin-top: 10px;
+    background-color: var(--color-primary);
+    color: var(--color-bg-secondary);
     transition: background-color 0.3s;
 }
 
-.login-btn {
-    background-color: #5DADE2; /* 로그인 버튼 색상 */
-    color: #1A1A1A;
-}
-
-.register-btn {
-    background-color: #5DADE2; /* 회원가입 버튼 색상 */
-    color: #1A1A1A;
+.auth-button:hover {
+    background-color: #00acc1;
 }
 
 .link-area {
@@ -86,19 +110,39 @@
 }
 
 .auth-link {
-    color: #5DADE2;
+    color: var(--color-primary);
     text-decoration: none;
     font-size: 14px;
 }
 
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+/* ================================
+   ⚠️ Message
+================================ */
 .error-message {
-    color: #E74C3C;
+    color: var(--color-danger);
     font-size: 14px;
     text-align: center;
+    margin-top: 5px;
 }
 
 .success-message {
-    color: #2ECC71;
+    color: var(--color-success);
     font-size: 14px;
     text-align: center;
+    margin-top: 5px;
+}
+
+/* ================================
+   🧭 Viewport & Body
+================================ */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--color-bg-primary);
 }

@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useNavigate, Link } from 'react-router-do
 import http from './api/http';
 import { connectWS, onTransactionsUpdated, onAlert } from './api/ws';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import TransactionForm from './components/TransactionForm';
 import TransactionsTable from './components/TransactionsTable';
 import BudgetBar from './components/BudgetBar';
@@ -27,8 +28,7 @@ const showDesktopNotification = (title, body) => {
   }
 };
 
-
-function MainDashboard({ isAuthenticated, onAuthenticated }) { // ⭐️ isAuthenticated prop 추가 ⭐️
+function MainDashboard({ isAuthenticated, onAuthenticated }) {
   const [transactions, setTransactions] = useState([]);
   const [budget, setBudget] = useState({ amount: 0 });
   const [toast, setToast] = useState(null);
@@ -73,21 +73,17 @@ function MainDashboard({ isAuthenticated, onAuthenticated }) { // ⭐️ isAuthe
   const fetchInitialData = useCallback(async () => {
     setIsLoading(true);
 
-    // 1. GET /api/auth/me 를 호출하여 쿠키 유효성을 확인
     try {
       await http.get('/auth/me');
-      onAuthenticated(); // 쿠키 유효성 확인 성공 시, AppWrapper 상태 업데이트
+      onAuthenticated();
     } catch (e) {
-      // /auth/me 호출이 401/403일 경우
       handleAuthError(e);
       setIsLoading(false);
-      return; // 인증 실패 시 데이터 로드 중단
+      return;
     }
 
-    // 2. 인증 확인 후 데이터 로드
     const dataLoaded = await fetchAllData();
     if (!dataLoaded) {
-      // fetchAllData 내부에서 리다이렉트 했으므로 추가 작업 불필요
     }
 
     setIsLoading(false);
@@ -95,13 +91,9 @@ function MainDashboard({ isAuthenticated, onAuthenticated }) { // ⭐️ isAuthe
 
 
   useEffect(() => {
-    // ⭐️ 핵심 수정: isAuthenticated 상태 기반으로 데이터 로딩 시점 조정 ⭐️
     if (!isAuthenticated) {
-      // AppWrapper가 처음 렌더링될 때만 실행. 쿠키가 유효한지 확인.
       fetchInitialData();
     } else {
-      // 로그인 성공 후 AppWrapper에서 isAuthenticated=true로 바뀐 후 실행.
-      // 이 때 쿠키는 최신 토큰을 반영했을 것이므로, 데이터 로드를 시작
       fetchAllData();
       setIsLoading(false);
     }
@@ -122,7 +114,7 @@ function MainDashboard({ isAuthenticated, onAuthenticated }) { // ⭐️ isAuthe
     });
 
     return () => { off1(); off2(); };
-  }, [isAuthenticated, fetchInitialData, fetchAllData]); // ⭐️ 의존성 배열에 isAuthenticated 추가 ⭐️
+  }, [isAuthenticated, fetchInitialData, fetchAllData]);
 
 
   const filtered = useMemo(() => {
@@ -152,7 +144,7 @@ function MainDashboard({ isAuthenticated, onAuthenticated }) { // ⭐️ isAuthe
     return list;
   }, [transactions]);
 
-  if (isLoading && !isAuthenticated) { // ⭐️ 로딩 조건 수정 ⭐️
+  if (isLoading && !isAuthenticated) {
     return (
       <div style={{ padding: '50px', textAlign: 'center', color: '#BDBDBD' }}>
         <p>데이터를 불러오는 중입니다...</p>
@@ -226,11 +218,10 @@ function AppWrapper() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  // ⭐️ 수정: onLoginSuccess가 인자를 받아 상태를 업데이트하고 리디렉션함 ⭐️
   const handleLoginSuccess = (isAuth) => {
     setIsAuthenticated(isAuth);
     if (isAuth) {
-      navigate("/"); // 로그인 성공 시 메인으로 바로 이동
+      navigate("/");
     }
   };
 
@@ -249,61 +240,26 @@ function AppWrapper() {
     <div className="app-container">
       <Header isAuthenticated={isAuthenticated} onLogout={handleLogout} />
 
-      <div className="content-wrap" style={{ minHeight: '100vh', paddingBottom: '70px' }}>
+      <div className="content-wrap" style={{ minHeight: '100vh', padding: '100px 24px 70px' }}>
         <Routes>
           <Route
             path="/"
             element={
               <MainDashboard
-                isAuthenticated={isAuthenticated} // ⭐️ prop 추가 ⭐️
+                isAuthenticated={isAuthenticated}
                 onAuthenticated={() => setIsAuthenticated(true)}
               />
             }
           />
-
-          <Route
-            path="/login"
-            element={
-              <LoginPage
-                onLoginSuccess={handleLoginSuccess} // ⭐️ 함수 전달 ⭐️
-              />
-            }
-          />
-
+          <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           <Route path="/register" element={<RegisterPage />} />
-
         </Routes>
       </div>
 
-      <footer style={{
-        backgroundColor: '#1A1A1A',
-        color: '#BDBDBD',
-        fontSize: '12px',
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '10px 30px',
-        boxSizing: 'border-box',
-        zIndex: 10
-      }}>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <Link to="/policy" style={{ color: '#BDBDBD', textDecoration: 'none' }}>Privacy Policy</Link>
-          <span style={{ color: '#666' }}>|</span>
-          <Link to="/terms" style={{ color: '#BDBDBD', textDecoration: 'none' }}>Terms and Conditions</Link>
-          <span style={{ color: '#666' }}>|</span>
-          <Link to="/cookies" style={{ color: '#BDBDBD', textDecoration: 'none' }}>Cookie Settings</Link>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-          <span>© 2025 WIZLET All rights reserved.</span>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
-
 
 export default function App() {
   return (

@@ -1,3 +1,6 @@
+/* ================================
+   🎨 Global Theme Variables
+================================ */
 :root {
   --color-bg-primary: #121212;
   --color-bg-secondary: #1e1e1e;
@@ -9,21 +12,72 @@
   --color-danger: #e74c3c;
 }
 
-body {
+/* ================================
+   🔹 Base Styles
+================================ */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+/* ================================
+   🧱 Root & Layout
+================================ */
+#root {
   margin: 0;
   padding: 0;
+  max-width: none;
 }
 
-#root {
+.content-wrap {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 24px;
-  text-align: left;
+  padding: 100px 24px 80px;
+  min-height: 100vh;
 }
 
+/* ================================
+   🧭 Header / Footer
+================================ */
+.header-container,
+.footer-container {
+  width: 100%;
+  color: var(--color-text-primary);
+  font-family: 'Trispace', sans-serif;
+}
+
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 16px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 12px 40px;
+  text-align: center;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ================================
+   🧩 Typography
+================================ */
 h1 {
   font-size: 2.5rem;
   font-weight: 700;
@@ -40,6 +94,9 @@ p {
   color: var(--color-text-secondary);
 }
 
+/* ================================
+   🔘 Buttons
+================================ */
 button {
   border-radius: 6px;
   border: 1px solid var(--color-border);
@@ -68,6 +125,9 @@ button.primary:hover {
   border-color: #00acc1;
 }
 
+/* ================================
+   ✏️ Form Elements
+================================ */
 input,
 select {
   padding: 8px 12px;
@@ -85,6 +145,9 @@ select:focus {
   box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
 }
 
+/* ================================
+   💰 Transactions Table
+================================ */
 .transactions-table table {
   width: 100%;
   border-collapse: collapse;
@@ -121,6 +184,9 @@ select:focus {
   font-weight: bold;
 }
 
+/* ================================
+   📊 Dashboard Layout
+================================ */
 .dashboard-container {
   margin: 0 auto;
   padding: 16px;
@@ -197,6 +263,9 @@ select:focus {
   border-radius: 8px;
 }
 
+/* ================================
+   🔔 Toast Message
+================================ */
 .toast {
   position: fixed;
   right: 24px;
@@ -208,4 +277,12 @@ select:focus {
   z-index: 1000;
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ================================
+   ⚙️ Misc
+================================ */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

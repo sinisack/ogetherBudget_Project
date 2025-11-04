@@ -35,7 +35,7 @@ export default function LoginPage({ onLoginSuccess }) {
         <div className="auth-container">
             <div className="auth-box">
                 <h2 className="auth-title">WIZLET</h2>
-                <p className="auth-subtitle">지금 접속하면, 당신의 예산을 바로 잡고, 원하는 지출은 지원받으세요. 매일 오전 9시 00분으로</p>
+                <p className="auth-subtitle">지금 입력하면, 구성원이 바로 본다. 반복 지출은 자동으로, 예산은 실시간으로</p>
 
                 <h3 className="form-heading">로그인</h3>
 
