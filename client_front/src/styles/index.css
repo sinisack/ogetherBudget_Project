@@ -1,5 +1,8 @@
-* { box-sizing: border-box; }
-body { margin: 0; font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
-button { cursor: pointer; }
-input, select, button { padding: 8px; border: 1px solid #ddd; border-radius: 6px; }
-th, td { padding: 8px; }
+button {
+    cursor: pointer;
+}
+
+th,
+td {
+    padding: 8px;
+}

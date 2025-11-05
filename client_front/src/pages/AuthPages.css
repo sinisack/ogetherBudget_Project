@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Trispace:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Trispace:wght@400;600&display=swap');
 
 /* ================================
-   🔐 Auth Page Layout
+   🔐 Auth Layout
 ================================ */
 .auth-container {
     display: flex;
@@ -68,40 +68,17 @@
     color: var(--color-text-primary);
 }
 
-.auth-input {
-    padding: 12px 14px;
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-primary);
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s, background-color 0.2s;
-}
-
-.auth-input:focus {
-    border-color: var(--color-primary);
-    background-color: var(--color-bg-secondary);
-}
-
 /* ================================
    🔘 Buttons & Links
 ================================ */
 .auth-button {
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    margin-top: 10px;
     background-color: var(--color-primary);
-    color: var(--color-bg-secondary);
-    transition: background-color 0.3s;
-}
-
-.auth-button:hover {
-    background-color: #00acc1;
+    border: 1px solid var(--color-primary);
+    color: var(--color-bg-primary);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 600;
+    transition: background-color 0.2s;
 }
 
 .link-area {
@@ -120,7 +97,7 @@
 }
 
 /* ================================
-   ⚠️ Message
+   ⚠️ Messages
 ================================ */
 .error-message {
     color: var(--color-danger);
@@ -137,12 +114,18 @@
 }
 
 /* ================================
-   🧭 Viewport & Body
+   📱 Responsive
 ================================ */
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: var(--color-bg-primary);
+@media (max-width: 768px) {
+    .auth-box {
+        padding: 40px 24px;
+    }
+
+    .auth-title {
+        font-size: 28px;
+    }
+
+    .auth-subtitle {
+        font-size: 12px;
+    }
 }
