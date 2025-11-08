@@ -1,13 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom';
-import http from '../api/http';
+import { logout } from '../api/auth';
 import './HeaderFooter.css';
 
-function Header({ isAuthenticated, onLogout }) {
+function Header({ authenticated, onLogout }) {
   const navigate = useNavigate();
-  const username = "사용자";
 
-  const handleLogout = async () => {
-    onLogout();
+  const handleProtectedNav = (path) => {
+    if (!authenticated) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    logout();
+    onLogout?.();
+    navigate('/login');
   };
 
   return (
@@ -18,17 +28,15 @@ function Header({ isAuthenticated, onLogout }) {
 
       <nav className="nav-menu">
         <ul className="nav-list">
-          <li><Link to="/list" className="nav-link">list</Link></li>
-          <li><Link to="/users" className="nav-link">users</Link></li>
-          <li><Link to="/settings" className="nav-link">settings</Link></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/list")}>list</button></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/users")}>users</button></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/settings")}>settings</button></li>
         </ul>
-        
-        {isAuthenticated ? (
-          <button className="logout-btn" onClick={handleLogout}>
-            로그아웃
-          </button>
+
+        {authenticated ? (
+          <button className="auth-btn" onClick={handleLogout}>logout</button>
         ) : (
-          <Link to="/login" className="login-button">login</Link>
+          <button className="auth-btn" onClick={() => navigate('/login')}>login</button>
         )}
       </nav>
     </header>

@@ -1,46 +1,76 @@
-import { useMemo, useState, useEffect } from 'react'
-import http from '../api/http'
-import './BudgetBar.css'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { requireAuth } from '../api/auth';
+import './BudgetBar.css';
 
-export default function BudgetBar({ budget, transactions, onUpdated }) {
-  const [amount, setAmount] = useState(budget?.amount || 0)
-  useEffect(() => setAmount(budget?.amount || 0), [budget])
+export default function BudgetBar({ onAddTransaction }) {
+  const [budget, setBudget] = useState(1000000);
+  const [spent, setSpent] = useState(0);
+  const [input, setInput] = useState('');
+  const [amount, setAmount] = useState('');
+  const navigate = useNavigate();
 
-  const spent = useMemo(
-    () => transactions.filter(t => t.type === 'EXPENSE').reduce((acc, t) => acc + t.amount, 0),
-    [transactions]
-  )
+  const remaining = budget - spent;
+  const percent = Math.min((spent / budget) * 100, 100);
 
-  const ratio = budget?.amount > 0 ? Math.min(100, Math.round((spent / budget.amount) * 100)) : 0
+  const handleReset = () => {
+    if (!requireAuth(navigate)) return;
+    setSpent(0);
+  };
 
-  const save = async () => {
-    const now = new Date()
-    await http.post('/budget', { year: now.getFullYear(), month: now.getMonth() + 1, amount: Number(amount) })
-    onUpdated?.()
-  }
+  const handleAdd = () => {
+    if (!requireAuth(navigate)) return;
+    if (!input || !amount) return;
+
+    const value = parseFloat(amount);
+    if (isNaN(value)) return;
+
+    onAddTransaction({ name: input, amount: value });
+    setSpent(spent + value);
+    setInput('');
+    setAmount('');
+  };
 
   return (
     <div className="budget-bar">
       <div className="budget-bar-top">
-        <b>월 예산</b>
+        <label>예산 설정:</label>
         <input
           type="number"
-          value={amount}
-          onChange={e => setAmount(e.target.value)}
-          className="budget-input"
+          value={budget}
+          onChange={(e) => setBudget(Number(e.target.value))}
         />
-        <button className="primary" onClick={save}>저장</button>
-        <span className="budget-summary">
-          사용 {spent.toLocaleString()} / {Number(budget?.amount || 0).toLocaleString()} ({ratio}%)
-        </span>
+        <button className="primary" onClick={handleReset}>초기화</button>
+        <div className="budget-summary">
+          남은 예산:{" "}
+          <b className={remaining >= 0 ? 'balance-positive' : 'balance-negative'}>
+            {remaining.toLocaleString()}원
+          </b>
+        </div>
       </div>
 
       <div className="budget-progress">
         <div
-          className={`budget-progress-bar ${ratio >= 80 ? 'danger' : 'safe'}`}
-          style={{ width: `${ratio}%` }}
+          className={`budget-progress-bar ${remaining < 0 ? 'danger' : 'safe'}`}
+          style={{ width: `${percent}%` }}
         />
       </div>
+
+      <div className="budget-bar-top">
+        <input
+          type="text"
+          placeholder="지출 내용"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="금액"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <button onClick={handleAdd}>추가</button>
+      </div>
     </div>
-  )
+  );
 }
