@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import http from '../api/http';
+import './TransactionForm.css';
 
 export default function TransactionForm({ onSaved }) {
   const [form, setForm] = useState({
@@ -27,10 +28,7 @@ export default function TransactionForm({ onSaved }) {
   };
 
   return (
-    <form
-      onSubmit={submit}
-      style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 2fr 120px 100px', gap: 8, margin: '16px 0' }}
-    >
+    <form className="transaction-form" onSubmit={submit}>
       <select name="type" value={form.type} onChange={change}>
         <option value="EXPENSE">지출</option>
         <option value="INCOME">수입</option>

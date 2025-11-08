@@ -1,0 +1,24 @@
+.transaction-form {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr 2fr 120px 100px;
+    gap: 8px;
+    margin: 16px 0;
+}
+
+.transaction-form select,
+.transaction-form input,
+.transaction-form button {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .transaction-form {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction-form button {
+        width: auto;
+        justify-self: start;
+    }
+}

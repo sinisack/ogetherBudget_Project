@@ -21,16 +21,27 @@
     color: var(--color-text-secondary);
 }
 
+.balance-positive {
+    color: var(--color-success);
+}
+
+.balance-negative {
+    color: var(--color-danger);
+}
+
 .budget-progress {
     height: 10px;
     background: #2a2a2a;
     border-radius: 6px;
     overflow: hidden;
+    margin-top: 12px;
 }
 
 .budget-progress-bar {
     height: 100%;
+    width: 0;
     transition: width 0.3s ease;
+    background: gray;
 }
 
 .budget-progress-bar.safe {

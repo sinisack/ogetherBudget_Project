@@ -26,7 +26,7 @@ export default function Dashboard({ transactions, onAddTransaction }) {
   return (
     <div className="dashboard">
       <div className="top-grid">
-        <BudgetBar onAddTransaction={handleAddTransaction} />
+        <BudgetBar transactions={transactions} onAddTransaction={handleAddTransaction} />
       </div>
 
       <TransactionForm onSaved={(newTransaction) => handleAddTransaction(newTransaction)} />
