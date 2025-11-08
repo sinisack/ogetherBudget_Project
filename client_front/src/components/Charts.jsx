@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell
 } from 'recharts';
-import './Charts.css';
 
 export default function Charts({ transactions = [] }) {
   const byDay = useMemo(() => {
@@ -40,7 +39,7 @@ export default function Charts({ transactions = [] }) {
         <h3>일자별 순변화</h3>
         <div className="chart-wrapper">
           {byDay.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={200}>
               <LineChart data={byDay}>
                 <XAxis dataKey="date" tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }} />
                 <YAxis tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }} />
@@ -73,7 +72,7 @@ export default function Charts({ transactions = [] }) {
         <h3>카테고리별 지출</h3>
         <div className="chart-wrapper">
           {byCategory.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={byCategory}

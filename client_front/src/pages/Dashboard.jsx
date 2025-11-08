@@ -1,27 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BudgetBar from '../components/BudgetBar';
 import Charts from '../components/Charts';
 import LiveFeed from '../components/LiveFeed';
+import TransactionForm from '../components/TransactionForm';
 import './DashboardLayout.css';
 
-export default function Dashboard() {
+export default function Dashboard({ transactions, onAddTransaction }) {
   const [feedItems, setFeedItems] = useState([]);
-  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const items = transactions
+      .slice()
+      .reverse()
+      .map(
+        t =>
+          `${t.type === 'INCOME' ? '수입' : '지출'}: ${t.amount.toLocaleString()}원 (${t.category})`
+      );
+    setFeedItems(items);
+  }, [transactions]);
 
   const handleAddTransaction = (t) => {
-    setTransactions([...transactions, t]);
-    setFeedItems([
-      `${t.name} 지출 ${t.amount.toLocaleString()}원`,
-      ...feedItems,
-    ]);
+    onAddTransaction(t);
   };
 
   return (
     <div className="dashboard">
       <div className="top-grid">
-        <h2>예산 관리</h2>
         <BudgetBar onAddTransaction={handleAddTransaction} />
       </div>
+
+      <TransactionForm onSaved={(newTransaction) => handleAddTransaction(newTransaction)} />
 
       <div className="bottom-grid">
         <section className="charts-section">

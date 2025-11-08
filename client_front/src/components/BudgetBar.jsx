@@ -25,7 +25,15 @@ export default function BudgetBar({ onAddTransaction }) {
     const value = parseFloat(amount);
     if (isNaN(value)) return;
 
-    onAddTransaction({ name: input, amount: value });
+    const newTransaction = {
+      type: 'EXPENSE',
+      amount: Number(value),
+      category: input,
+      memo: '',
+      occurredAt: new Date().toISOString(),
+    };
+
+    onAddTransaction(newTransaction);
     setSpent(spent + value);
     setInput('');
     setAmount('');
@@ -54,22 +62,6 @@ export default function BudgetBar({ onAddTransaction }) {
           className={`budget-progress-bar ${remaining < 0 ? 'danger' : 'safe'}`}
           style={{ width: `${percent}%` }}
         />
-      </div>
-
-      <div className="budget-bar-top">
-        <input
-          type="text"
-          placeholder="지출 내용"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="금액"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
-        <button onClick={handleAdd}>추가</button>
       </div>
     </div>
   );

@@ -1,7 +1,14 @@
 .charts-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .chart-card {
@@ -11,6 +18,7 @@
   padding: 20px;
   color: var(--color-text-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  width: 100%;
 }
 
 .chart-card h3 {

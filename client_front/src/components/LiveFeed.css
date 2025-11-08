@@ -21,18 +21,27 @@
 }
 
 .live-feed li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 10px;
   border-bottom: 1px dotted #333;
   padding-bottom: 5px;
 }
 
+.live-feed-user {
+  font-weight: 600;
+  color: var(--color-primary);
+  min-width: 120px;
+}
+
+.live-feed-content {
+  flex-grow: 1;
+  color: var(--color-text-primary);
+}
+
 .live-feed time {
   font-size: 0.8rem;
   color: var(--color-text-secondary);
-  display: block;
-}
-
-.live-feed p {
-  margin: 0;
-  color: var(--color-text-primary);
+  white-space: nowrap;
 }

@@ -1,10 +1,13 @@
-import http from '../api/http'
+import http from '../api/http';
 
 export default function TransactionsTable({ items, onChanged }) {
-  const del = async (id) => { await http.delete(`/transactions/${id}`); onChanged?.() }
+  const del = async (id) => { 
+    await http.delete(`/transactions/${id}`); 
+    onChanged?.(); 
+  };
 
   return (
-    <table width="100%" style={{ borderCollapse: 'collapse' }}>
+    <table width="100%" style={{ borderCollapse: 'collapse', marginTop: 16 }}>
       <thead>
         <tr>
           <th align="left">일시</th>
@@ -28,5 +31,5 @@ export default function TransactionsTable({ items, onChanged }) {
         ))}
       </tbody>
     </table>
-  )
+  );
 }
