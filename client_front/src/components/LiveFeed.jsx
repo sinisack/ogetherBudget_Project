@@ -20,7 +20,7 @@ export default function LiveFeed({ items }) {
 
   return (
     <div className="live-feed">
-      <h3>Live Feed (활동 피드)</h3>
+      <h3>활동 피드</h3>
       {items.length === 0 ? (
         <p style={{ color: 'var(--color-text-secondary)', fontStyle: 'italic' }}>
           아직 활동이 없습니다.
@@ -29,7 +29,6 @@ export default function LiveFeed({ items }) {
         <ul>
           {items.map((item, i) => (
             <li key={i}>
-              <span className="live-feed-user">{userEmail || "Guest"}</span>
               <span className="live-feed-content">{item}</span>
               <time>{new Date().toLocaleTimeString()}</time>
             </li>

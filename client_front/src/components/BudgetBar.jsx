@@ -20,12 +20,24 @@ export default function BudgetBar({ transactions = [] }) {
     setLoading(false);
   }, [transactions]);
 
-  const totalIncome = transactions
-    .filter(t => t.type === 'INCOME')
+  const validTransactions = Array.isArray(transactions)
+    ? transactions.filter(
+        (t) => t && typeof t.type === 'string' && typeof t.amount === 'number'
+      )
+    : [];
+
+  if (process.env.NODE_ENV === 'development') {
+    if (transactions.some((t) => t == null)) {
+      console.warn('⚠️ transactions contains null/undefined:', transactions);
+    }
+  }
+
+  const totalIncome = validTransactions
+    .filter((t) => t.type === 'INCOME')
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalExpense = transactions
-    .filter(t => t.type === 'EXPENSE')
+  const totalExpense = validTransactions
+    .filter((t) => t.type === 'EXPENSE')
     .reduce((sum, t) => sum + t.amount, 0);
 
   const remaining = budget + totalIncome - totalExpense;
@@ -51,15 +63,21 @@ export default function BudgetBar({ transactions = [] }) {
           onChange={(e) => setBudgetInput(e.target.value)}
           className="budget-input"
         />
-        <button className="primary" onClick={handleSave}>저장</button>
+        <button className="primary" onClick={handleSave}>
+          저장
+        </button>
 
         <div className="budget-summary">
           {loading ? (
             <span>로딩 중...</span>
           ) : (
             <>
-              남은 예산:{" "}
-              <b className={remaining >= 0 ? 'balance-positive' : 'balance-negative'}>
+              남은 예산:{' '}
+              <b
+                className={
+                  remaining >= 0 ? 'balance-positive' : 'balance-negative'
+                }
+              >
                 {remaining.toLocaleString()}원
               </b>
             </>
@@ -70,7 +88,9 @@ export default function BudgetBar({ transactions = [] }) {
       {!loading && (
         <div className="budget-progress">
           <div
-            className={`budget-progress-bar ${remaining < 0 ? 'danger' : 'safe'}`}
+            className={`budget-progress-bar ${
+              remaining < 0 ? 'danger' : 'safe'
+            }`}
             style={{ width: `${percent}%` }}
           />
         </div>

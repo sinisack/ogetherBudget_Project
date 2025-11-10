@@ -29,12 +29,6 @@
   padding-bottom: 5px;
 }
 
-.live-feed-user {
-  font-weight: 600;
-  color: var(--color-primary);
-  min-width: 120px;
-}
-
 .live-feed-content {
   flex-grow: 1;
   color: var(--color-text-primary);

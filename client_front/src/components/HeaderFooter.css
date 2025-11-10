@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: 'Trispace', sans-serif;
+  font-family: 'Trispace', 'Pretendard', 'Noto Sans KR', sans-serif;
   background-color: var(--color-bg-primary);
   box-sizing: border-box;
 }
@@ -35,7 +35,6 @@
   gap: 24px;
   flex-wrap: nowrap;
   overflow-x: auto;
-  /* 작은 화면에서 스크롤 가능 */
 }
 
 .nav-list {

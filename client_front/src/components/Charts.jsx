@@ -5,10 +5,25 @@ import {
 } from 'recharts';
 
 export default function Charts({ transactions = [] }) {
+  const validTransactions = Array.isArray(transactions)
+    ? transactions.filter(
+        (t) =>
+          t &&
+          typeof t.amount === 'number' &&
+          typeof t.type === 'string' &&
+          t.occurredAt
+      )
+    : [];
+
+  if (process.env.NODE_ENV === 'development') {
+    if (transactions.some((t) => t == null)) {
+      console.warn('⚠️ transactions contains null/undefined:', transactions);
+    }
+  }
+
   const byDay = useMemo(() => {
     const map = {};
-    transactions.forEach(t => {
-      if (!t.occurredAt || !t.amount) return;
+    validTransactions.forEach((t) => {
       const d = new Date(t.occurredAt).toISOString().slice(0, 10);
       const v = t.type === 'INCOME' ? t.amount : -t.amount;
       map[d] = (map[d] || 0) + v;
@@ -16,17 +31,18 @@ export default function Charts({ transactions = [] }) {
     return Object.entries(map)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([date, value]) => ({ date, value }));
-  }, [transactions]);
+  }, [validTransactions]);
 
   const byCategory = useMemo(() => {
     const map = {};
-    transactions
-      .filter(t => t.type === 'EXPENSE')
-      .forEach(t => {
-        map[t.category || '기타'] = (map[t.category || '기타'] || 0) + t.amount;
+    validTransactions
+      .filter((t) => t.type === 'EXPENSE')
+      .forEach((t) => {
+        const key = t.category || '기타';
+        map[key] = (map[key] || 0) + t.amount;
       });
     return Object.entries(map).map(([name, value]) => ({ name, value }));
-  }, [transactions]);
+  }, [validTransactions]);
 
   const COLORS = [
     '#00bcd4', '#2ecc71', '#e74c3c', '#f1c40f', '#9b59b6',
@@ -41,14 +57,19 @@ export default function Charts({ transactions = [] }) {
           {byDay.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
               <LineChart data={byDay}>
-                <XAxis dataKey="date" tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }} />
-                <YAxis tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }} />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                />
+                <YAxis
+                  tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: 'rgba(0,0,0,0.85)',
                     border: '1px solid var(--color-border)',
                     borderRadius: '6px',
-                    color: '#fff'
+                    color: '#fff',
                   }}
                 />
                 <Line
@@ -79,7 +100,9 @@ export default function Charts({ transactions = [] }) {
                   dataKey="value"
                   nameKey="name"
                   outerRadius={80}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
                 >
                   {byCategory.map((_, i) => (
                     <Cell key={i} fill={COLORS[i % COLORS.length]} />
@@ -90,7 +113,7 @@ export default function Charts({ transactions = [] }) {
                     backgroundColor: 'rgba(0,0,0,0.85)',
                     border: '1px solid var(--color-border)',
                     borderRadius: '6px',
-                    color: '#fff'
+                    color: '#fff',
                   }}
                 />
               </PieChart>

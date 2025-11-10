@@ -28,15 +28,14 @@ function Header({ authenticated, onLogout }) {
 
       <nav className="nav-menu">
         <ul className="nav-list">
-          <li><button className="nav-link" onClick={() => handleProtectedNav("/list")}>list</button></li>
-          <li><button className="nav-link" onClick={() => handleProtectedNav("/users")}>users</button></li>
-          <li><button className="nav-link" onClick={() => handleProtectedNav("/settings")}>settings</button></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/list")}>목록</button></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/settings")}>설정</button></li>
         </ul>
 
         {authenticated ? (
-          <button className="auth-btn" onClick={handleLogout}>logout</button>
+          <button className="auth-btn" onClick={handleLogout}>로그아웃</button>
         ) : (
-          <button className="auth-btn" onClick={() => navigate('/login')}>login</button>
+          <button className="auth-btn" onClick={() => navigate('/login')}>로그인</button>
         )}
       </nav>
     </header>
