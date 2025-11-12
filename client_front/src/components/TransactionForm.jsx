@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import http from '../api/http';
+import { CATEGORY_COLORS } from '../utils/categoryColors';
 import './TransactionForm.css';
 
 export default function TransactionForm({ onSaved }) {
   const [form, setForm] = useState({
     type: 'EXPENSE',
     amount: '',
-    category: 'Misc',
+    category: '식비',
+    customCategory: '',
     memo: '',
     occurredAt: new Date().toISOString(),
   });
 
   const [error, setError] = useState('');
+
+  const categories = CATEGORY_COLORS[form.type]
+    ? Object.keys(CATEGORY_COLORS[form.type])
+    : [];
 
   const change = (e) => {
     const { name, value } = e.target;
@@ -28,10 +34,15 @@ export default function TransactionForm({ onSaved }) {
       return;
     }
 
+    const finalCategory =
+      form.category === '기타'
+        ? form.customCategory.trim() || '기타'
+        : form.category;
+
     const payload = {
       ...form,
       amount,
-      category: form.category?.trim() || '기타',
+      category: finalCategory,
       memo: form.memo?.trim() || '',
       occurredAt: form.occurredAt || new Date().toISOString(),
     };
@@ -42,7 +53,8 @@ export default function TransactionForm({ onSaved }) {
       setForm({
         type: 'EXPENSE',
         amount: '',
-        category: 'Misc',
+        category: '식비',
+        customCategory: '',
         memo: '',
         occurredAt: new Date().toISOString(),
       });
@@ -72,12 +84,28 @@ export default function TransactionForm({ onSaved }) {
         step="any"
       />
 
-      <input
+      <select
         name="category"
         value={form.category}
         onChange={change}
-        placeholder="카테고리"
-      />
+        required
+      >
+        {categories.map((c) => (
+          <option key={c} value={c}>
+            {c}
+          </option>
+        ))}
+      </select>
+
+      {form.category === '기타' && (
+        <input
+          name="customCategory"
+          value={form.customCategory}
+          onChange={change}
+          placeholder="직접 입력"
+          required
+        />
+      )}
 
       <input
         name="memo"

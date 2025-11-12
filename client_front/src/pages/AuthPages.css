@@ -84,10 +84,6 @@
     cursor: pointer;
 }
 
-.auth-button:hover {
-    background-color: var(--color-secondary);
-}
-
 .link-area {
     text-align: right;
     margin-top: 10px;

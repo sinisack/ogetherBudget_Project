@@ -1,53 +1,87 @@
 .budget-bar {
-    background-color: var(--color-bg-secondary);
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-bg-secondary);
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
 }
 
 .budget-bar-top {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.budget-label {
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .budget-input {
-    width: 140px;
+  width: 140px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  color: var(--color-text-primary);
+}
+
+.primary-btn {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.primary-btn:hover {
+  background: var(--color-primary-hover);
 }
 
 .budget-summary {
-    margin-left: auto;
-    color: var(--color-text-secondary);
+  margin-left: auto;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-secondary);
+}
+
+.summary-label {
+  font-weight: 500;
+}
+
+.over-label {
+  color: var(--color-danger);
+  font-size: 0.85rem;
 }
 
 .balance-positive {
-    color: var(--color-success);
+  color: var(--color-success);
 }
 
 .balance-negative {
-    color: var(--color-danger);
+  color: var(--color-danger);
 }
 
 .budget-progress {
-    height: 10px;
-    background: #2a2a2a;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 12px;
+  height: 12px;
+  background: #222;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 12px;
 }
 
 .budget-progress-bar {
-    height: 100%;
-    width: 0;
-    transition: width 0.3s ease;
-    background: gray;
-}
-
-.budget-progress-bar.safe {
-    background: var(--color-success);
+  height: 100%;
+  transition: width 0.4s ease-in-out;
+  background: var(--color-success);
 }
 
 .budget-progress-bar.danger {
-    background: var(--color-danger);
+  background: var(--color-danger);
 }

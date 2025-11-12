@@ -26,12 +26,6 @@ export default function BudgetBar({ transactions = [] }) {
       )
     : [];
 
-  if (process.env.NODE_ENV === 'development') {
-    if (transactions.some((t) => t == null)) {
-      console.warn('⚠️ transactions contains null/undefined:', transactions);
-    }
-  }
-
   const totalIncome = validTransactions
     .filter((t) => t.type === 'INCOME')
     .reduce((sum, t) => sum + t.amount, 0);
@@ -41,10 +35,8 @@ export default function BudgetBar({ transactions = [] }) {
     .reduce((sum, t) => sum + t.amount, 0);
 
   const remaining = budget + totalIncome - totalExpense;
-
   const totalBudget = Math.max(budget + totalIncome, 1);
-  let percent = totalExpense > 0 ? (totalExpense / totalBudget) * 100 : 0;
-  percent = Math.min(percent, 100);
+  const percent = Math.min((totalExpense / totalBudget) * 100, 100);
 
   const handleSave = () => {
     if (!requireAuth(navigate)) return;
@@ -56,14 +48,14 @@ export default function BudgetBar({ transactions = [] }) {
   return (
     <div className="budget-bar">
       <div className="budget-bar-top">
-        <label>예산 설정:</label>
+        <label className="budget-label">예산 설정</label>
         <input
           type="number"
           value={budgetInput}
           onChange={(e) => setBudgetInput(e.target.value)}
           className="budget-input"
         />
-        <button className="primary" onClick={handleSave}>
+        <button className="primary-btn" onClick={handleSave}>
           저장
         </button>
 
@@ -72,14 +64,15 @@ export default function BudgetBar({ transactions = [] }) {
             <span>로딩 중...</span>
           ) : (
             <>
-              남은 예산:{' '}
+              <span className="summary-label">남은 예산:</span>{' '}
               <b
                 className={
                   remaining >= 0 ? 'balance-positive' : 'balance-negative'
                 }
               >
-                {remaining.toLocaleString()}원
+                {Math.abs(remaining).toLocaleString()}원
               </b>
+              {remaining < 0 && <span className="over-label"> (예산 초과)</span>}
             </>
           )}
         </div>

@@ -1,0 +1,44 @@
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.calendar-cell {
+    min-height: 70px;
+    background: var(--color-bg);
+    border-radius: 8px;
+    text-align: center;
+    padding: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.calendar-cell:hover {
+    background: var(--color-bg-hover);
+    transform: scale(1.02);
+}
+
+.calendar-cell.selected {
+    border: 2px solid var(--color-primary);
+    box-shadow: 0 0 6px rgba(0, 200, 255, 0.4);
+}
+
+.calendar-cell.spent .day {
+    color: var(--color-danger);
+}
+
+.calendar-cell .day {
+    font-weight: 600;
+    display: block;
+    color: var(--color-text-primary);
+}
+
+.calendar-cell .amount {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    margin-top: 4px;
+}

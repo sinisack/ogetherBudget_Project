@@ -1,14 +1,7 @@
 .charts-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  display: flex;
+  justify-content: center;
   width: 100%;
-}
-
-@media (max-width: 768px) {
-  .charts-container {
-    grid-template-columns: 1fr;
-  }
 }
 
 .chart-card {
@@ -19,15 +12,47 @@
   color: var(--color-text-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   width: 100%;
+  max-width: 520px;
 }
 
-.chart-card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 0;
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 6px;
   margin-bottom: 16px;
+}
+
+.chart-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.chart-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.chart-tabs button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.chart-tabs button.active {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.chart-tabs button:hover:not(.active) {
+  background-color: var(--color-bg-hover);
 }
 
 .chart-wrapper {
