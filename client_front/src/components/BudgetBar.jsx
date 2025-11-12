@@ -1,20 +1,58 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { requireAuth } from '../api/auth';
 import './BudgetBar.css';
 
-export default function BudgetBar({ transactions = [] }) {
-  const navigate = useNavigate();
+const getMonthlyBudgets = () => {
+  try {
+    const stored = localStorage.getItem('monthlyBudgets');
+    return stored ? JSON.parse(stored) : {};
+  } catch (error) {
+    console.error('Error loading monthly budgets:', error);
+    return {};
+  }
+};
 
-  const [budgetInput, setBudgetInput] = useState(
-    () => Number(localStorage.getItem('budget')) || 1000000
-  );
-  const [budget, setBudget] = useState(budgetInput);
+const saveMonthlyBudgets = (budgets) => {
+  try {
+    localStorage.setItem('monthlyBudgets', JSON.stringify(budgets));
+  } catch (error) {
+    console.error('Error saving monthly budgets:', error);
+  }
+};
+
+const getMonthKey = (date) => {
+  const d = new Date(date);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+};
+
+export default function BudgetBar({ transactions = [], currentMonth }) {
+  const navigate = useNavigate();
+  const currentMonthKey = useMemo(() => getMonthKey(currentMonth), [currentMonth]);
+  const [monthlyBudgets, setMonthlyBudgets] = useState(getMonthlyBudgets);
+  const getCurrentMonthBudget = useMemo(() => {
+    return monthlyBudgets[currentMonthKey] || 1000000;
+  }, [monthlyBudgets, currentMonthKey]);
+  const [budgetInput, setBudgetInput] = useState(getCurrentMonthBudget);
+  const [budget, setBudget] = useState(getCurrentMonthBudget);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('budget', budget);
-  }, [budget]);
+    const newBudget = monthlyBudgets[currentMonthKey] ?? 1000000;
+    setBudgetInput(newBudget);
+    setBudget(newBudget);
+    console.log(`[BudgetBar] Month changed to ${currentMonthKey}. Budget set to ${newBudget}`);
+  }, [currentMonthKey]);
+
+  useEffect(() => {
+    setMonthlyBudgets(prevBudgets => {
+      const currentStored = prevBudgets[currentMonthKey] ?? 1000000;
+      if (currentStored === budget) return prevBudgets;
+      const newBudgets = { ...prevBudgets, [currentMonthKey]: budget };
+      saveMonthlyBudgets(newBudgets);
+      return newBudgets;
+    });
+  }, [budget, currentMonthKey]);
 
   useEffect(() => {
     setLoading(false);
@@ -22,8 +60,8 @@ export default function BudgetBar({ transactions = [] }) {
 
   const validTransactions = Array.isArray(transactions)
     ? transactions.filter(
-        (t) => t && typeof t.type === 'string' && typeof t.amount === 'number'
-      )
+      (t) => t && typeof t.type === 'string' && typeof t.amount === 'number'
+    )
     : [];
 
   const totalIncome = validTransactions
@@ -41,14 +79,19 @@ export default function BudgetBar({ transactions = [] }) {
   const handleSave = () => {
     if (!requireAuth(navigate)) return;
     const newBudget = Number(budgetInput);
-    if (isNaN(newBudget) || newBudget <= 0) return;
-    setBudget(newBudget);
+    if (isNaN(newBudget) || newBudget <= 0) {
+      alert('유효한 예산 금액을 입력해주세요.');
+      return;
+    }
+    if (newBudget !== budget) {
+      setBudget(newBudget);
+    }
   };
 
   return (
     <div className="budget-bar">
       <div className="budget-bar-top">
-        <label className="budget-label">예산 설정</label>
+        <label className="budget-label">예산 설정 ({currentMonthKey})</label>
         <input
           type="number"
           value={budgetInput}
@@ -81,9 +124,8 @@ export default function BudgetBar({ transactions = [] }) {
       {!loading && (
         <div className="budget-progress">
           <div
-            className={`budget-progress-bar ${
-              remaining < 0 ? 'danger' : 'safe'
-            }`}
+            className={`budget-progress-bar ${remaining < 0 ? 'danger' : 'safe'
+              }`}
             style={{ width: `${percent}%` }}
           />
         </div>

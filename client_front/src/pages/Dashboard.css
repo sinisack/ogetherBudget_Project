@@ -23,7 +23,7 @@
   grid-template-columns: 2fr 1fr;
   gap: 24px;
   margin-top: 32px;
-  align-items: start;
+  align-items: stretch;
 }
 
 @media (max-width: 1024px) {
@@ -38,12 +38,18 @@
   border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   width: 100%;
   box-sizing: border-box;
 }
 
-.charts-section h2,
+.feed-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  height: 100%;
+}
+
 .feed-section h3 {
   margin-top: 0;
   margin-bottom: 16px;
@@ -53,12 +59,21 @@
   padding-bottom: 6px;
 }
 
+.charts-section h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
 .calendar-section {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .calendar-header {

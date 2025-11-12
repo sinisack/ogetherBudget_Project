@@ -4,7 +4,7 @@ import Charts from '../components/Charts';
 import LiveFeed from '../components/LiveFeed';
 import TransactionForm from '../components/TransactionForm';
 import CalendarView from '../components/CalendarView';
-import './DashboardLayout.css';
+import './Dashboard.css';
 
 export default function Dashboard({ transactions = [], onAddTransaction }) {
   const [feedItems, setFeedItems] = useState([]);
@@ -51,6 +51,7 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
   const handleMonthChange = (offset) => {
     const newDate = new Date(currentMonth);
     newDate.setMonth(currentMonth.getMonth() + offset);
+    setSelectedDate(null);
     setCurrentMonth(newDate);
   };
 
@@ -59,7 +60,7 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
       <div className="top-grid">
         <BudgetBar
           transactions={monthlyTransactions}
-          onAddTransaction={handleAddTransaction}
+          currentMonth={currentMonth}
         />
 
         <section className="calendar-section">
@@ -82,7 +83,6 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
 
       <div className="bottom-grid">
         <section className="charts-section">
-          <h2>카테고리별 지출</h2>
           <Charts transactions={monthlyTransactions} />
         </section>
 

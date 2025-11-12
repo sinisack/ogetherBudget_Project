@@ -28,7 +28,7 @@
 }
 
 .calendar-cell.spent .day {
-    color: var(--color-danger);
+    color: var(--color-primary);
 }
 
 .calendar-cell .day {

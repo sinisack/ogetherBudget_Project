@@ -6,8 +6,7 @@
 }
 
 .transaction-form select,
-.transaction-form input,
-.transaction-form button {
+.transaction-form input {
     width: 100%;
     box-sizing: border-box;
 }
@@ -26,15 +25,6 @@
     border-radius: 4px;
     background-color: var(--color-bg-secondary);
     color: var(--color-text-primary);
-}
-
-.transaction-form button {
-    padding: 6px 10px;
-    background-color: var(--color-primary);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
 }
 
 @media (max-width: 768px) {

@@ -10,7 +10,7 @@ import { CATEGORY_COLORS } from '../utils/categoryColors';
 import './Charts.css';
 
 export default function Charts({ transactions = [] }) {
-  const [viewType, setViewType] = useState('EXPENSE'); // 'EXPENSE' | 'INCOME'
+  const [viewType, setViewType] = useState('EXPENSE');
 
   const validTransactions = Array.isArray(transactions)
     ? transactions.filter(
@@ -36,62 +36,72 @@ export default function Charts({ transactions = [] }) {
   const colors = CATEGORY_COLORS[viewType];
 
   return (
-    <div className="charts-container single">
-      <div className="chart-card">
-        <div className="chart-header">
-          <h3>{viewType === 'EXPENSE' ? '지출' : '수입'} 카테고리별 현황</h3>
-          <div className="chart-tabs">
-            <button
-              className={viewType === 'EXPENSE' ? 'active' : ''}
-              onClick={() => setViewType('EXPENSE')}
-            >
-              지출
-            </button>
-            <button
-              className={viewType === 'INCOME' ? 'active' : ''}
-              onClick={() => setViewType('INCOME')}
-            >
-              수입
-            </button>
-          </div>
+    <div className="charts-container">
+      <div className="chart-header">
+        <h3>{viewType === 'EXPENSE' ? '지출' : '수입'} 카테고리별 현황</h3>
+        <div className="chart-tabs">
+          <button
+            className={viewType === 'EXPENSE' ? 'active' : ''}
+            onClick={() => setViewType('EXPENSE')}
+          >
+            지출
+          </button>
+          <button
+            className={viewType === 'INCOME' ? 'active' : ''}
+            onClick={() => setViewType('INCOME')}
+          >
+            수입
+          </button>
         </div>
+      </div>
 
-        <div className="chart-wrapper">
-          {byCategory.length > 0 ? (
-            <ResponsiveContainer width="100%" height={260}>
-              <PieChart>
-                <Pie
-                  data={byCategory}
-                  dataKey="value"
-                  nameKey="name"
-                  outerRadius={100}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                >
-                  {byCategory.map((entry, i) => (
-                    <Cell
-                      key={i}
-                      fill={colors[entry.name] || colors['기타']}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'rgba(0,0,0,0.85)',
-                    border: '1px solid var(--color-border)',
-                    borderRadius: '6px',
-                    color: '#fff',
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          ) : (
-            <p style={{ textAlign: 'center', color: 'var(--color-text-secondary)' }}>
-              데이터가 없습니다.
-            </p>
-          )}
-        </div>
+      <div className="chart-wrapper">
+        {byCategory.length > 0 ? (
+          <ResponsiveContainer width="100%" height={260}>
+            <PieChart>
+              <Pie
+                data={byCategory}
+                dataKey="value"
+                nameKey="name"
+                outerRadius={100}
+                label={({ name, percent }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
+              >
+                {byCategory.map((entry, i) => (
+                  <Cell
+                    key={i}
+                    fill={colors[entry.name] || colors['기타']}
+                  />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'var(--color-bg-secondary)',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '6px',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
+                }}
+                itemStyle={{
+                  color: 'var(--color-text-primary)',
+                }}
+                labelStyle={{
+                  color: 'var(--color-text-secondary)',
+                  fontWeight: 600,
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <p
+            style={{
+              textAlign: 'center',
+              color: 'var(--color-text-secondary)',
+            }}
+          >
+            데이터가 없습니다.
+          </p>
+        )}
       </div>
     </div>
   );
