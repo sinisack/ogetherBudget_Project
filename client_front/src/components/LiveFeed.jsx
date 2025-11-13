@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import http from '../api/http';
+import { formatDate } from '../utils/format';
 import './LiveFeed.css';
 
-export default function LiveFeed({ items = [] }) {
+export default function LiveFeed({ items = [], dateFormat }) {
   const [userEmail, setUserEmail] = useState(null);
   const [visibleStart, setVisibleStart] = useState(0);
 
@@ -46,7 +47,7 @@ export default function LiveFeed({ items = [] }) {
             {visibleItems.map((item, i) => (
               <li key={i + visibleStart}>
                 <span className="live-feed-content">{item}</span>
-                <time>{new Date().toLocaleTimeString()}</time>
+                <time>{formatDate(new Date(), dateFormat)}</time>
               </li>
             ))}
           </ul>

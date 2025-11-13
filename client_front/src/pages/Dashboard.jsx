@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import BudgetBar from '../components/BudgetBar';
 import Charts from '../components/Charts';
 import LiveFeed from '../components/LiveFeed';
@@ -10,6 +10,9 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
   const [feedItems, setFeedItems] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  const numberFormat = localStorage.getItem("settings-numberFormat") || "comma";
+  const dateFormat = localStorage.getItem("settings-dateFormat") || "YYYY.MM.DD";
 
   const safeTransactions = useMemo(() => {
     if (!Array.isArray(transactions)) return [];
@@ -58,12 +61,15 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
   return (
     <div className="dashboard">
       <div className="top-grid">
-        <BudgetBar
-          transactions={monthlyTransactions}
-          currentMonth={currentMonth}
-        />
+        <section className="card-section">
+          <BudgetBar
+            transactions={monthlyTransactions}
+            currentMonth={currentMonth}
+            numberFormat={numberFormat}
+          />
+        </section>
 
-        <section className="calendar-section">
+        <section className="card-section calendar-section">
           <div className="calendar-header">
             <button onClick={() => handleMonthChange(-1)}>◀</button>
             <h2>
@@ -75,19 +81,29 @@ export default function Dashboard({ transactions = [], onAddTransaction }) {
             transactions={monthlyTransactions}
             selectedDate={selectedDate}
             onDateSelect={setSelectedDate}
+            numberFormat={numberFormat}
+            dateFormat={dateFormat}
           />
         </section>
       </div>
 
-      <TransactionForm onSaved={handleAddTransaction} />
+      <section className="card-section form-section">
+        <TransactionForm onSaved={handleAddTransaction} />
+      </section>
 
       <div className="bottom-grid">
-        <section className="charts-section">
-          <Charts transactions={monthlyTransactions} />
+        <section className="card-section charts-section">
+          <Charts
+            transactions={monthlyTransactions}
+            numberFormat={numberFormat}
+          />
         </section>
 
-        <section className="feed-section">
-          <LiveFeed items={feedItems} />
+        <section className="card-section feed-section">
+          <LiveFeed
+            items={feedItems}
+            dateFormat={dateFormat}
+          />
         </section>
       </div>
     </div>

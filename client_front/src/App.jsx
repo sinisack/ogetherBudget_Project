@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import TransactionsPage from './pages/TransactionsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import Settings from './pages/Settings';   // ⭐ 추가
 import { isLoggedIn } from './api/auth';
 import http from './api/http';
 import './App.css';
@@ -70,10 +71,8 @@ export default function App() {
                 />
               }
             />
-            <Route
-              path="/login"
-              element={<LoginPage onLoginSuccess={() => setAuthenticated(true)} />}
-            />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/login" element={<LoginPage onLoginSuccess={() => setAuthenticated(true)} />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>
         </main>

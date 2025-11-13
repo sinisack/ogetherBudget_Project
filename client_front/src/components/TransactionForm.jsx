@@ -3,7 +3,7 @@ import http from '../api/http';
 import { CATEGORY_COLORS } from '../utils/categoryColors';
 import './TransactionForm.css';
 
-export default function TransactionForm({ onSaved }) {
+export default function TransactionForm({ onSaved, dateFormat }) {
   const [form, setForm] = useState({
     type: 'EXPENSE',
     amount: '',
@@ -91,9 +91,7 @@ export default function TransactionForm({ onSaved }) {
         required
       >
         {categories.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
+          <option key={c} value={c}>{c}</option>
         ))}
       </select>
 
@@ -116,11 +114,7 @@ export default function TransactionForm({ onSaved }) {
 
       <button type="submit">추가</button>
 
-      {error && (
-        <p className="form-error" style={{ color: 'red', marginTop: '6px' }}>
-          {error}
-        </p>
-      )}
+      {error && <p className="form-error">{error}</p>}
     </form>
   );
 }

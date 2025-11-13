@@ -1,0 +1,87 @@
+.settings-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  color: var(--color-text-primary);
+}
+
+.settings-title {
+  font-size: 24px;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+.settings-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.settings-card h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 6px;
+}
+
+.desc {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* input + button */
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.primary {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-bg-primary);
+}
+
+.primary:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+}
+
+/* toggle */
+.toggle {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.toggle input {
+  transform: scale(1.2);
+}
+
+/* danger zone */
+.danger-zone {
+  border-color: var(--color-danger);
+}
+
+.danger-text {
+  color: var(--color-danger);
+}
+
+.danger-btn {
+  width: 100%;
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.danger-btn:hover {
+  background: #ff6f6a;
+}

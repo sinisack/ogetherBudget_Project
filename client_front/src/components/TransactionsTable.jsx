@@ -1,9 +1,10 @@
 import http from '../api/http';
+import { formatNumber, formatDate } from '../utils/format';
 
-export default function TransactionsTable({ items, onChanged }) {
-  const del = async (id) => { 
-    await http.delete(`/transactions/${id}`); 
-    onChanged?.(); 
+export default function TransactionsTable({ items, onChanged, numberFormat, dateFormat }) {
+  const del = async (id) => {
+    await http.delete(`/transactions/${id}`);
+    onChanged?.();
   };
 
   return (
@@ -21,11 +22,11 @@ export default function TransactionsTable({ items, onChanged }) {
       <tbody>
         {items.map(t => (
           <tr key={t.id} style={{ borderTop: '1px solid #eee' }}>
-            <td>{new Date(t.occurredAt).toLocaleString()}</td>
+            <td>{formatDate(t.occurredAt, dateFormat)}</td>
             <td>{t.type === 'INCOME' ? '수입' : '지출'}</td>
             <td>{t.category}</td>
             <td>{t.memo}</td>
-            <td align="right">{t.amount.toLocaleString()}</td>
+            <td align="right">{formatNumber(t.amount, numberFormat)}원</td>
             <td align="right"><button onClick={() => del(t.id)}>삭제</button></td>
           </tr>
         ))}

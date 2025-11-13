@@ -1,8 +1,8 @@
 .charts-container {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 100%;
+  gap: 16px;
 }
 
 .chart-header {
@@ -11,13 +11,6 @@
   align-items: center;
   border-bottom: 1px solid var(--color-border);
   padding-bottom: 6px;
-  margin-bottom: 16px;
-}
-
-.chart-header h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
 }
 
 .chart-tabs {
@@ -25,10 +18,95 @@
   gap: 8px;
 }
 
-.chart-wrapper {
-  flex-grow: 1;
+.chart-tabs button {
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.chart-tabs button.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #000;
+}
+
+.chart-body {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.chart-visual {
+  position: relative;
+}
+
+.chart-center-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.chart-center-label strong {
+  font-size: 1.4rem;
+  display: block;
+}
+
+.chart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chart-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 260px;
+  color: #000;
+}
+
+.chart-item-labels .name {
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+
+.chart-item-labels .percent {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.chart-item-value {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.no-data {
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .chart-body {
+    grid-template-columns: 1fr;
+  }
 }

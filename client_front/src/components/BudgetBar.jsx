@@ -1,135 +1,87 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { requireAuth } from '../api/auth';
+import { useState, useMemo, useEffect } from 'react';
+import http from '../api/http';
+import BudgetSummary from './BudgetSummary';
+import { formatNumber } from '../utils/format';
 import './BudgetBar.css';
 
-const getMonthlyBudgets = () => {
-  try {
-    const stored = localStorage.getItem('monthlyBudgets');
-    return stored ? JSON.parse(stored) : {};
-  } catch (error) {
-    console.error('Error loading monthly budgets:', error);
-    return {};
-  }
-};
+export default function BudgetBar({ transactions = [], currentMonth, numberFormat }) {
+  const ym = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}`;
+  const monthKey = "budget-" + ym;
 
-const saveMonthlyBudgets = (budgets) => {
-  try {
-    localStorage.setItem('monthlyBudgets', JSON.stringify(budgets));
-  } catch (error) {
-    console.error('Error saving monthly budgets:', error);
-  }
-};
-
-const getMonthKey = (date) => {
-  const d = new Date(date);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-};
-
-export default function BudgetBar({ transactions = [], currentMonth }) {
-  const navigate = useNavigate();
-  const currentMonthKey = useMemo(() => getMonthKey(currentMonth), [currentMonth]);
-  const [monthlyBudgets, setMonthlyBudgets] = useState(getMonthlyBudgets);
-  const getCurrentMonthBudget = useMemo(() => {
-    return monthlyBudgets[currentMonthKey] || 1000000;
-  }, [monthlyBudgets, currentMonthKey]);
-  const [budgetInput, setBudgetInput] = useState(getCurrentMonthBudget);
-  const [budget, setBudget] = useState(getCurrentMonthBudget);
-  const [loading, setLoading] = useState(true);
+  const [budget, setBudget] = useState(0);
+  const [input, setInput] = useState('');
 
   useEffect(() => {
-    const newBudget = monthlyBudgets[currentMonthKey] ?? 1000000;
-    setBudgetInput(newBudget);
-    setBudget(newBudget);
-    console.log(`[BudgetBar] Month changed to ${currentMonthKey}. Budget set to ${newBudget}`);
-  }, [currentMonthKey]);
+    const saved = localStorage.getItem(monthKey);
 
-  useEffect(() => {
-    setMonthlyBudgets(prevBudgets => {
-      const currentStored = prevBudgets[currentMonthKey] ?? 1000000;
-      if (currentStored === budget) return prevBudgets;
-      const newBudgets = { ...prevBudgets, [currentMonthKey]: budget };
-      saveMonthlyBudgets(newBudgets);
-      return newBudgets;
-    });
-  }, [budget, currentMonthKey]);
-
-  useEffect(() => {
-    setLoading(false);
-  }, [transactions]);
-
-  const validTransactions = Array.isArray(transactions)
-    ? transactions.filter(
-      (t) => t && typeof t.type === 'string' && typeof t.amount === 'number'
-    )
-    : [];
-
-  const totalIncome = validTransactions
-    .filter((t) => t.type === 'INCOME')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const totalExpense = validTransactions
-    .filter((t) => t.type === 'EXPENSE')
-    .reduce((sum, t) => sum + t.amount, 0);
-
-  const remaining = budget + totalIncome - totalExpense;
-  const totalBudget = Math.max(budget + totalIncome, 1);
-  const percent = Math.min((totalExpense / totalBudget) * 100, 100);
-
-  const handleSave = () => {
-    if (!requireAuth(navigate)) return;
-    const newBudget = Number(budgetInput);
-    if (isNaN(newBudget) || newBudget <= 0) {
-      alert('유효한 예산 금액을 입력해주세요.');
+    if (saved != null) {
+      setBudget(Number(saved));
       return;
     }
-    if (newBudget !== budget) {
-      setBudget(newBudget);
+
+    const auto = localStorage.getItem("settings-autoApplyBudget") === "true";
+    const defaultBudget = localStorage.getItem("settings-defaultBudget");
+
+    if (auto && defaultBudget) {
+      localStorage.setItem(monthKey, defaultBudget);
+      setBudget(Number(defaultBudget));
+    } else {
+      setBudget(0);
     }
+  }, [monthKey]);
+
+  const spent = useMemo(() => {
+    return transactions
+      .filter((t) => t.type === 'EXPENSE')
+      .reduce((sum, t) => sum + t.amount, 0);
+  }, [transactions]);
+
+  const remaining = budget - spent;
+  const percent = budget > 0 ? Math.min((spent / budget) * 100, 100) : 0;
+
+  const saveBudget = async () => {
+    const value = Number(input);
+    if (isNaN(value) || value < 0) return;
+
+    setBudget(value);
+    localStorage.setItem(monthKey, String(value));
+
+    try {
+      await http.post('/budget', {
+        month: ym,
+        amount: value,
+      });
+    } catch { }
   };
 
   return (
-    <div className="budget-bar">
-      <div className="budget-bar-top">
-        <label className="budget-label">예산 설정 ({currentMonthKey})</label>
-        <input
-          type="number"
-          value={budgetInput}
-          onChange={(e) => setBudgetInput(e.target.value)}
-          className="budget-input"
-        />
-        <button className="primary-btn" onClick={handleSave}>
-          저장
-        </button>
+    <div className="budget-card">
+      <BudgetSummary transactions={transactions} numberFormat={numberFormat} />
 
-        <div className="budget-summary">
-          {loading ? (
-            <span>로딩 중...</span>
-          ) : (
-            <>
-              <span className="summary-label">남은 예산:</span>{' '}
-              <b
-                className={
-                  remaining >= 0 ? 'balance-positive' : 'balance-negative'
-                }
-              >
-                {Math.abs(remaining).toLocaleString()}원
-              </b>
-              {remaining < 0 && <span className="over-label"> (예산 초과)</span>}
-            </>
-          )}
-        </div>
+      <h3>이번 달 예산 요약</h3>
+
+      <div className="budget-stats">
+        <div><span>총 예산:</span> {formatNumber(budget, numberFormat)}원</div>
+        <div><span>사용 금액:</span> {formatNumber(spent, numberFormat)}원</div>
+        <div><span>남은 예산:</span> {formatNumber(remaining, numberFormat)}원</div>
       </div>
 
-      {!loading && (
-        <div className="budget-progress">
-          <div
-            className={`budget-progress-bar ${remaining < 0 ? 'danger' : 'safe'
-              }`}
-            style={{ width: `${percent}%` }}
-          />
+      <div className="budget-bar-wrap">
+        <div className="budget-bar-bg">
+          <div className="budget-bar-fill" style={{ width: `${percent}%` }}></div>
         </div>
-      )}
+        <small>{percent.toFixed(1)}%</small>
+      </div>
+
+      <div className="budget-input">
+        <input
+          type="number"
+          placeholder="예산 입력"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button onClick={saveBudget}>저장</button>
+      </div>
     </div>
   );
 }
