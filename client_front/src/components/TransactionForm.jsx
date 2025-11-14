@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import http from '../api/http';
 import { CATEGORY_COLORS } from '../utils/categoryColors';
 import './TransactionForm.css';
@@ -18,6 +18,16 @@ export default function TransactionForm({ onSaved, dateFormat }) {
   const categories = CATEGORY_COLORS[form.type]
     ? Object.keys(CATEGORY_COLORS[form.type])
     : [];
+
+  useEffect(() => {
+    if (!categories.includes(form.category)) {
+      setForm((f) => ({
+        ...f,
+        category: categories[0],
+        customCategory: '',
+      }));
+    }
+  }, [form.type]);
 
   const change = (e) => {
     const { name, value } = e.target;

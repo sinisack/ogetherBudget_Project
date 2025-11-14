@@ -6,49 +6,10 @@ import {
   Cell,
 } from 'recharts';
 
-import {
-  ForkKnife,
-  Car,
-  ShoppingBag,
-  House,
-  DeviceMobile,
-  Heart,
-  GraduationCap,
-  Confetti,
-  ShieldPlus,
-  Money,
-  Coins,
-  Wallet,
-  Briefcase,
-  CurrencyDollar,
-  Gift,
-  Note,
-} from 'phosphor-react';
-
 import { CATEGORY_COLORS } from '../utils/categoryColors';
 import { formatNumber } from '../utils/format';
+import { ICON_MAP } from '../utils/iconMap';
 import './Charts.css';
-
-const ICON_MAP = {
-  '식비': ForkKnife,
-  '교통': Car,
-  '주거/관리비': House,
-  '통신': DeviceMobile,
-  '쇼핑': ShoppingBag,
-  '의료/건강': Heart,
-  '교육': GraduationCap,
-  '문화/여가': Confetti,
-  '보험': ShieldPlus,
-  '저축/투자': Money,
-  '급여': Briefcase,
-  '보너스': Gift,
-  '이자소득': Coins,
-  '투자수익': CurrencyDollar,
-  '용돈': Wallet,
-  '사업수익': Note,
-  '환급금': CurrencyDollar,
-  '기타': Wallet,
-};
 
 export default function Charts({ transactions = [], numberFormat }) {
   const [viewType, setViewType] = useState('EXPENSE');

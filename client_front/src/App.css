@@ -10,6 +10,7 @@
   --color-secondary: #3aa8c1;
   --color-success: #3cd070;
   --color-danger: #de5246;
+  --color-danger-hover: #cd5c5c;
 }
 
 * {
@@ -74,7 +75,6 @@ button {
 
 button:hover {
   background-color: var(--color-secondary);
-  border-color: var(--color-secondary);
 }
 
 button.primary {

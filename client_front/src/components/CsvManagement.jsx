@@ -27,7 +27,9 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
       if (cols.length !== headers.length) continue;
 
       const obj = {};
-      headers.forEach((h, j) => { obj[h] = cols[j].replace(/^"|"$/g, '').trim(); });
+      headers.forEach((h, j) => {
+        obj[h] = cols[j].replace(/^"|"$/g, '').trim();
+      });
       rows.push(obj);
     }
     return rows;
@@ -35,19 +37,35 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
 
   const onCsvFile = (file) => {
     const reader = new FileReader();
+
     reader.onload = () => {
+      const buffer = reader.result;
+
+      let utf8Text = new TextDecoder("utf-8", { fatal: false }).decode(buffer);
+
+      const validHangul = utf8Text.match(/[\uac00-\ud7a3]/g)?.length || 0;
+      const weirdChars = utf8Text.match(/[�]/g)?.length || 0;
+
+      let finalText = utf8Text;
+
+      if (weirdChars > validHangul) {
+        console.warn("UTF-8 decoding broken → decoding as EUC-KR");
+        finalText = new TextDecoder("euc-kr", { fatal: false }).decode(buffer);
+      }
+
       try {
-        const parsed = parseCSV(reader.result);
+        const parsed = parseCSV(finalText);
         setCsvPreview(parsed);
         setToast(`CSV ${parsed.length}행 로드 완료`);
-        setTimeout(() => setToast(null), 3000);
       } catch (err) {
         console.error('CSV 파싱 오류', err);
         setToast('CSV 파싱 실패');
-        setTimeout(() => setToast(null), 3000);
       }
+
+      setTimeout(() => setToast(null), 3000);
     };
-    reader.readAsText(file, 'utf-8');
+
+    reader.readAsArrayBuffer(file);
   };
 
   const importCsv = async () => {
@@ -56,13 +74,24 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
     let success = 0, fail = 0;
 
     for (const row of csvPreview) {
+      const dateString =
+        row.date || row.DATE || row.일자 || row.날짜 || row.거래일 || null;
+
+      const occurredAt = dateString
+        ? new Date(dateString).toISOString()
+        : new Date().toISOString();
+
       const payload = {
         amount: Number(row.amount || row.AMOUNT || row.금액) || 0,
-        type: (row.type || row.TYPE || 'EXPENSE').toUpperCase() === 'INCOME' ? 'INCOME' : 'EXPENSE',
+        type:
+          (row.type || row.TYPE || 'EXPENSE').toUpperCase() === 'INCOME'
+            ? 'INCOME'
+            : 'EXPENSE',
         description: row.description || row.DESCRIPTION || row.내역 || '',
         category: row.category || row.CATEGORY || row.카테고리 || '기타',
-        date: row.date || row.DATE || new Date().toISOString(),
+        occurredAt,
       };
+
       try {
         await http.post('/transactions', payload);
         success++;
@@ -87,18 +116,14 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
     const headerRow = headers.join(',');
 
     const dataRows = items.map(item => {
-      const dateStr = item.date
-        ? new Date(item.date).toLocaleString('ko-KR', {
-          year: 'numeric', month: '2-digit', day: '2-digit',
-          hour: '2-digit', minute: '2-digit'
-        })
-        : '';
+      const dateStr = item.occurredAt || item.date || '';
+
       const values = [
         `"${dateStr}"`,
         item.type,
         item.amount,
         `"${(item.description || '').replace(/"/g, '""')}"`,
-        `"${(item.category || '').replace(/"/g, '""')}"`
+        `"${(item.category || '').replace(/"/g, '""')}"`,
       ];
       return values.join(',');
     });
@@ -113,7 +138,10 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
     const a = document.createElement('a');
 
     const now = new Date();
-    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(now.getDate()).padStart(2, '0')}`;
 
     a.download = `가계부_거래내역_${dateStr}.csv`;
     a.href = url;
@@ -135,18 +163,42 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
       <input
         type="file"
         accept=".csv,text/csv"
-        onChange={(e) => e.target.files?.[0] && onCsvFile(e.target.files[0])}
+        onChange={(e) =>
+          e.target.files?.[0] && onCsvFile(e.target.files[0])
+        }
       />
 
       {csvPreview.length > 0 && (
         <div style={{ marginTop: 12 }}>
           <h4>미리보기 ({csvPreview.length}행)</h4>
-          <div style={{ maxHeight: 200, overflow: 'auto', border: '1px solid #eee', padding: 8 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+          <div
+            style={{
+              maxHeight: 200,
+              overflow: 'auto',
+              border: '1px solid #eee',
+              padding: 8,
+            }}
+          >
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                fontSize: '12px',
+              }}
+            >
               <thead>
                 <tr>
                   {Object.keys(csvPreview[0]).map((h) => (
-                    <th key={h} style={{ textAlign: 'left', padding: 4, borderBottom: '1px solid #f0f0f0' }}>{h}</th>
+                    <th
+                      key={h}
+                      style={{
+                        textAlign: 'left',
+                        padding: 4,
+                        borderBottom: '1px solid #f0f0f0',
+                      }}
+                    >
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
@@ -154,7 +206,15 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
                 {csvPreview.map((r, idx) => (
                   <tr key={idx}>
                     {Object.keys(r).map((k) => (
-                      <td key={k} style={{ padding: 4, borderBottom: '1px solid #fafafa' }}>{r[k]}</td>
+                      <td
+                        key={k}
+                        style={{
+                          padding: 4,
+                          borderBottom: '1px solid #fafafa',
+                        }}
+                      >
+                        {r[k]}
+                      </td>
                     ))}
                   </tr>
                 ))}
@@ -166,7 +226,14 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
             <button onClick={importCsv} disabled={importing}>
               {importing ? '업로드 중...' : '서버로 업로드 (행당 POST)'}
             </button>
-            <button onClick={() => setCsvPreview([])} style={{ marginLeft: 8 }} disabled={importing}>취소</button>
+
+            <button
+              onClick={() => setCsvPreview([])}
+              style={{ marginLeft: 8 }}
+              disabled={importing}
+            >
+              취소
+            </button>
           </div>
         </div>
       )}

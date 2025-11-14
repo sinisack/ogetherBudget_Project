@@ -28,7 +28,7 @@ function Header({ authenticated, onLogout }) {
 
       <nav className="nav-menu">
         <ul className="nav-list">
-          <li><button className="nav-link" onClick={() => handleProtectedNav("/list")}>목록</button></li>
+          <li><button className="nav-link" onClick={() => handleProtectedNav("/summary")}>요약</button></li>
           <li><button className="nav-link" onClick={() => handleProtectedNav("/settings")}>설정</button></li>
         </ul>
 

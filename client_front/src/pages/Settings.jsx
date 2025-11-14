@@ -74,7 +74,7 @@ export default function Settings() {
                         value={defaultBudget}
                         onChange={(e) => setDefaultBudget(e.target.value)}
                     />
-                    <button className="primary" onClick={saveDefaultBudget}>저장</button>
+                    <button onClick={saveDefaultBudget}>저장</button>
                 </div>
             </div>
 
@@ -116,9 +116,7 @@ export default function Settings() {
 
             <div className="settings-card danger-zone">
                 <h3>로컬 데이터 초기화</h3>
-                <p className="desc danger-text">
-                    모든 로컬 데이터가 삭제됩니다.
-                </p>
+                <p className="desc danger-text">모든 로컬 데이터가 삭제됩니다.</p>
                 <button className="danger-btn" onClick={handleResetData}>
                     로컬 데이터 초기화
                 </button>

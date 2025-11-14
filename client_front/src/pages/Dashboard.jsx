@@ -5,7 +5,11 @@ import TransactionForm from '../components/TransactionForm';
 import CalendarView from '../components/CalendarView';
 import './Dashboard.css';
 
-export default function Dashboard({ transactions = [], onAddTransaction, onReload }) {
+export default function Dashboard({
+  transactions = [],
+  onAddTransaction,
+  onTransactionsChange,
+}) {
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -57,11 +61,9 @@ export default function Dashboard({ transactions = [], onAddTransaction, onReloa
             transactions={monthlyTransactions}
             currentMonth={currentMonth}
             numberFormat={numberFormat}
-
-            // ⭐ 추가
             selectedDate={selectedDate}
             dailyTransactions={dailyTransactions}
-            onReload={onReload}
+            onReload={onTransactionsChange}
           />
         </section>
 
