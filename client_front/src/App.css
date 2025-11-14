@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Trispace:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
 
-/* ================================
-   🌍 Global Variables
-================================ */
 :root {
   --color-bg-primary: #121212;
   --color-bg-secondary: #1b1b1b;
@@ -15,9 +12,6 @@
   --color-danger: #de5246;
 }
 
-/* ================================
-   🔹 Base
-================================ */
 * {
   box-sizing: border-box;
 }
@@ -26,13 +20,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
   width: 100%;
-  overflow-x: hidden;
-  /* 좌우 스크롤 제거 */
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .app-container {
@@ -41,9 +32,6 @@ body {
   flex-direction: column;
 }
 
-/* ================================
-   📄 Main Content
-================================ */
 .content-wrap {
   flex: 1;
   padding-top: 96px;
@@ -72,9 +60,6 @@ body {
   color: var(--color-text-primary);
 }
 
-/* ================================
-   🔘 Buttons
-================================ */
 button {
   border-radius: 6px;
   border: 1px solid var(--color-border);
@@ -98,9 +83,6 @@ button.primary {
   color: var(--color-bg-primary);
 }
 
-/* ================================
-   ✏️ Inputs
-================================ */
 input,
 select {
   padding: 8px 12px;
@@ -109,19 +91,15 @@ select {
   background-color: var(--color-bg-secondary);
   color: var(--color-text-primary);
   font-size: 1rem;
-  transition: border-color 0.2s, background-color 0.2s;
 }
 
 input:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 195, 227, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 195, 227, 0.25);
 }
 
-/* ================================
-   📄 Link Buttons
-================================ */
 .link-button {
   display: inline-block;
   background-color: var(--color-primary);
@@ -129,8 +107,8 @@ select:focus {
   padding: 8px 14px;
   border-radius: 6px;
   text-decoration: none;
-  transition: all 0.2s;
   font-weight: 600;
+  transition: all 0.2s;
 }
 
 .link-button:hover {
@@ -138,15 +116,11 @@ select:focus {
   color: var(--color-bg-primary);
 }
 
-/* ================================
-   📱 Responsive
-================================ */
 @media (max-width: 1024px) {
   .content-wrap {
     padding-top: 88px;
     padding-bottom: 72px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-inline: 16px;
   }
 }
 

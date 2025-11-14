@@ -1,10 +1,18 @@
 import { useState, useMemo, useEffect } from 'react';
 import http from '../api/http';
 import BudgetSummary from './BudgetSummary';
+import DailyTransactionsTable from './DailyTransactionsTable';
 import { formatNumber } from '../utils/format';
 import './BudgetBar.css';
 
-export default function BudgetBar({ transactions = [], currentMonth, numberFormat }) {
+export default function BudgetBar({
+  transactions = [],
+  currentMonth,
+  numberFormat,
+  selectedDate,
+  dailyTransactions = [],
+  onReload
+}) {
   const ym = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}`;
   const monthKey = "budget-" + ym;
 
@@ -54,9 +62,34 @@ export default function BudgetBar({ transactions = [], currentMonth, numberForma
     } catch { }
   };
 
+  const renderDailyFeed = () => {
+    if (!selectedDate) return null;
+
+    return (
+      <div className="daily-feed-area">
+        <h4>{selectedDate} 내역</h4>
+
+        {dailyTransactions.length === 0 ? (
+          <p style={{ color: 'var(--color-text-secondary)', marginTop: 10 }}>
+            내역이 없습니다.
+          </p>
+        ) : (
+          <DailyTransactionsTable
+            items={dailyTransactions}
+            onChanged={onReload}
+            numberFormat={numberFormat}
+          />
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="budget-card">
-      <BudgetSummary transactions={transactions} numberFormat={numberFormat} />
+      <BudgetSummary
+        transactions={transactions}
+        numberFormat={numberFormat}
+      />
 
       <h3>이번 달 예산 요약</h3>
 
@@ -82,6 +115,8 @@ export default function BudgetBar({ transactions = [], currentMonth, numberForma
         />
         <button onClick={saveBudget}>저장</button>
       </div>
+
+      {renderDailyFeed()}
     </div>
   );
 }

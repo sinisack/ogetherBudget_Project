@@ -53,7 +53,7 @@ export default function CalendarView({
         {total > 0 && (
           <div className="spending-info">
             <span className="dot" />
-            <span className="amount">{formatNumber(total, numberFormat)}원</span>
+            <span className="amount">{formatNumber(total, numberFormat)}</span>
           </div>
         )}
       </div>

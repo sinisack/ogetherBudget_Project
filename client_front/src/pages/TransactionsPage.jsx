@@ -1,5 +1,4 @@
 import TransactionForm from '../components/TransactionForm';
-import TransactionsTable from '../components/TransactionsTable';
 import CsvManagement from '../components/CsvManagement';
 
 export default function TransactionsPage({ transactions, onTransactionsChange, setToast }) {
@@ -14,13 +13,6 @@ export default function TransactionsPage({ transactions, onTransactionsChange, s
         transactions={transactions}
         onImportComplete={onTransactionsChange}
         setToast={setToast}
-        numberFormat={numberFormat}
-        dateFormat={dateFormat}
-      />
-
-      <TransactionsTable
-        items={transactions}
-        onChanged={onTransactionsChange}
         numberFormat={numberFormat}
         dateFormat={dateFormat}
       />

@@ -26,7 +26,7 @@
 
 .bottom-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1.1fr);
+  grid-template-columns: 1fr;
   gap: 24px;
   align-items: stretch;
 }
@@ -41,7 +41,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .calendar-header h2 {
@@ -50,32 +50,14 @@
 }
 
 .calendar-header button {
-  background: var(--color-bg-primary);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
   border-radius: 6px;
   padding: 4px 10px;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s;
-}
-
-.calendar-header button:hover {
-  background: var(--color-bg-hover);
-}
-
-.charts-section,
-.feed-section {
-  padding: 20px;
-}
-
-.feed-section {
-  display: flex;
-  flex-direction: column;
+  transition: opacity 0.2s;
 }
 
 @media (max-width: 1024px) {
-
   .top-grid,
   .bottom-grid {
     grid-template-columns: 1fr;
