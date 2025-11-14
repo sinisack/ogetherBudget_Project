@@ -57,7 +57,38 @@
   transition: opacity 0.2s;
 }
 
+.calendar-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.calendar-footer-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.calendar-footer-group label {
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.calendar-footer-group select {
+  padding: 6px;
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+}
+
 @media (max-width: 1024px) {
+
   .top-grid,
   .bottom-grid {
     grid-template-columns: 1fr;
@@ -71,5 +102,9 @@
 
   .calendar-header h2 {
     font-size: 1rem;
+  }
+
+  .calendar-footer {
+    justify-content: space-between;
   }
 }

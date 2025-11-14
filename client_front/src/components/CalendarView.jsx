@@ -21,7 +21,7 @@ export default function CalendarView({
   const dailyTotals = transactions.reduce((acc, t) => {
     if (!t?.occurredAt) return acc;
     const d = new Date(t.occurredAt);
-    if (d.getMonth() !== month) return acc;
+    if (d.getFullYear() !== year || d.getMonth() !== month) return acc;
 
     const day = d.getDate();
     acc[day] = (acc[day] || 0) + (t.type === 'EXPENSE' ? t.amount : 0);
@@ -41,7 +41,11 @@ export default function CalendarView({
 
   for (let d = 1; d <= daysInMonth; d++) {
     const total = dailyTotals[d] || 0;
-    const isSelected = selectedDate && new Date(selectedDate).getDate() === d;
+    const isSelected =
+      selectedDate &&
+      new Date(selectedDate).getFullYear() === year &&
+      new Date(selectedDate).getMonth() === month &&
+      new Date(selectedDate).getDate() === d;
 
     cells.push(
       <div

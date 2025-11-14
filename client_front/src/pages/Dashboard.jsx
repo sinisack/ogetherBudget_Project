@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import BudgetBar from '../components/BudgetBar';
 import Charts from '../components/Charts';
 import TransactionForm from '../components/TransactionForm';
@@ -12,18 +12,25 @@ export default function Dashboard({
 }) {
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`;
   });
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const numberFormat = localStorage.getItem("settings-numberFormat") || "comma";
-  const dateFormat = localStorage.getItem("settings-dateFormat") || "YYYY.MM.DD";
+  const numberFormat = localStorage.getItem('settings-numberFormat') || 'comma';
+  const dateFormat = localStorage.getItem('settings-dateFormat') || 'YYYY.MM.DD';
+
+  const years = useMemo(() => {
+    const start = 1970;
+    const end = new Date().getFullYear();
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }, []);
 
   const safeTransactions = useMemo(() => {
     if (!Array.isArray(transactions)) return [];
-    return transactions.filter(
-      t => t && typeof t.amount === "number" && t.occurredAt
-    );
+    return transactions.filter((t) => t && typeof t.amount === 'number' && t.occurredAt);
   }, [transactions]);
 
   const monthlyTransactions = useMemo(() => {
@@ -49,8 +56,31 @@ export default function Dashboard({
     setCurrentMonth(newDate);
 
     const d = new Date(newDate);
-    const todayStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    setSelectedDate(todayStr);
+    const newStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(d.getDate()).padStart(2, '0')}`;
+    setSelectedDate(newStr);
+  };
+
+  const updateYearMonth = (year, monthIndex) => {
+    const newDate = new Date(currentMonth);
+    newDate.setFullYear(year);
+    newDate.setMonth(monthIndex);
+    setCurrentMonth(newDate);
+
+    const dateStr = `${year}-${String(monthIndex + 1).padStart(2, '0')}-01`;
+    setSelectedDate(dateStr);
+  };
+
+  const handleYearSelectChange = (e) => {
+    const year = Number(e.target.value);
+    updateYearMonth(year, currentMonth.getMonth());
+  };
+
+  const handleMonthSelectChange = (e) => {
+    const monthIndex = Number(e.target.value) - 1;
+    updateYearMonth(currentMonth.getFullYear(), monthIndex);
   };
 
   return (
@@ -70,7 +100,9 @@ export default function Dashboard({
         <section className="card-section calendar-section">
           <div className="calendar-header">
             <button onClick={() => handleMonthChange(-1)}>◀</button>
-            <h2>{currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월</h2>
+            <h2>
+              {currentMonth.getFullYear()}년 {currentMonth.getMonth() + 1}월
+            </h2>
             <button onClick={() => handleMonthChange(1)}>▶</button>
           </div>
 
@@ -81,6 +113,33 @@ export default function Dashboard({
             numberFormat={numberFormat}
             dateFormat={dateFormat}
           />
+
+          <div className="calendar-footer">
+            <div className="calendar-footer-group">
+              <label>연도</label>
+              <select
+                value={currentMonth.getFullYear()}
+                onChange={handleYearSelectChange}
+              >
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}년
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="calendar-footer-group">
+              <label>월</label>
+              <select value={currentMonth.getMonth() + 1} onChange={handleMonthSelectChange}>
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                  <option key={m} value={m}>
+                    {m}월
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </section>
       </div>
 
