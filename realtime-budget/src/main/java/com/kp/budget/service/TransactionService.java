@@ -36,11 +36,16 @@ public class TransactionService {
 
     public Transaction create(Transaction t) {
         Long uid = auth.currentUserId();
-        User ownerRef = em.getReference(User.class, uid); // ★ 권장
+        User ownerRef = em.getReference(User.class, uid); // ★ 권장: 전체 유저 조회 없이 레퍼런스만
         t.setOwner(ownerRef);
         return repo.save(t);
     }
 
+    /**
+     * 내역 수정 (부분 수정 지원)
+     * - dto 에서 null이 아닌 필드만 반영
+     * - type 은 enum 이라고 가정하고 String -> Transaction.Type 변환
+     */
     public Transaction update(Long id, TransactionDto dto) {
         Long uid = auth.currentUserId();
         Transaction t = repo.findByIdAndOwnerId(id, uid).orElseThrow();
@@ -51,7 +56,8 @@ public class TransactionService {
         if (dto.amount()     != null) t.setAmount(dto.amount());
         if (dto.type()       != null) t.setType(Transaction.Type.valueOf(dto.type()));
 
-        return t; // 변경감지
+        // @Transactional + 변경감지로 자동 반영
+        return t;
     }
 
     public void delete(Long id) {
