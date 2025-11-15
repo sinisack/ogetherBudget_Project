@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import http from "../api/http";
 import { CATEGORY_COLORS } from "../utils/categoryColors";
+import { formatDate } from "../utils/format";
 import "./TransactionManageModal.css";
 
 export default function TransactionManageModal({ transaction, onClose, onChanged }) {
 
     const [editing, setEditing] = useState(false);
+
+    const dateFormat = localStorage.getItem("settings-dateFormat") || "YYYY.MM.DD";
 
     const [form, setForm] = useState({
         type: transaction.type,
@@ -13,6 +16,7 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
         customCategory: "",
         memo: transaction.memo,
         amount: transaction.amount,
+        occurredAt: transaction.occurredAt.slice(0, 10),
     });
 
     const categories = CATEGORY_COLORS[form.type]
@@ -42,7 +46,6 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
         if (!clean) return;
 
         let recent = JSON.parse(localStorage.getItem("recent-memos") || "[]");
-
         recent = [clean, ...recent.filter((m) => m !== clean)].slice(0, 10);
 
         localStorage.setItem("recent-memos", JSON.stringify(recent));
@@ -64,6 +67,7 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
             ...form,
             category: finalCategory,
             memo: form.memo.trim() || "",
+            occurredAt: `${form.occurredAt}T00:00:00`,
         };
 
         await http.put(`/transactions/${transaction.id}`, payload);
@@ -93,6 +97,7 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
                         <p><b>{transaction.category}</b></p>
                         <p>{transaction.memo}</p>
                         <p>{transaction.amount}원</p>
+                        <p>{formatDate(transaction.occurredAt, dateFormat)}</p>
 
                         <div className="modal-btn-wrap">
                             <button onClick={() => setEditing(true)}>수정</button>
@@ -104,8 +109,8 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
 
                         <label>유형</label>
                         <select name="type" value={form.type} onChange={change}>
-                            <option value="INCOME">수입</option>
                             <option value="EXPENSE">지출</option>
+                            <option value="INCOME">수입</option>
                         </select>
 
                         <label>카테고리</label>
@@ -130,7 +135,9 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
                             value={form.memo}
                             onChange={change}
                             onFocus={() => setShowMemoList(true)}
-                            onBlur={() => setTimeout(() => setShowMemoList(false), 100)}
+                            onBlur={() =>
+                                setTimeout(() => setShowMemoList(false), 100)
+                            }
                             placeholder="메모 입력"
                             autoComplete="off"
                         />
@@ -156,6 +163,14 @@ export default function TransactionManageModal({ transaction, onClose, onChanged
                             type="number"
                             name="amount"
                             value={form.amount}
+                            onChange={change}
+                        />
+
+                        <label>일자</label>
+                        <input
+                            type="date"
+                            name="occurredAt"
+                            value={form.occurredAt}
                             onChange={change}
                         />
 

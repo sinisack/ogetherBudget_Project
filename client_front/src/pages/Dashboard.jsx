@@ -10,6 +10,7 @@ export default function Dashboard({
   onAddTransaction,
   onTransactionsChange,
 }) {
+
   const [selectedDate, setSelectedDate] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
@@ -145,7 +146,10 @@ export default function Dashboard({
       </div>
 
       <section className="card-section form-section">
-        <TransactionForm onSaved={onAddTransaction} />
+        <TransactionForm
+          onSaved={onAddTransaction}
+          selectedDate={selectedDate}
+        />
       </section>
 
       <div className="bottom-grid">

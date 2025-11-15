@@ -3,14 +3,14 @@ import http from '../api/http';
 import { CATEGORY_COLORS } from '../utils/categoryColors';
 import './TransactionForm.css';
 
-export default function TransactionForm({ onSaved, dateFormat }) {
+export default function TransactionForm({ onSaved, selectedDate }) {
   const [form, setForm] = useState({
     type: 'EXPENSE',
     amount: '',
     category: '식비',
     customCategory: '',
     memo: '',
-    occurredAt: new Date().toISOString(),
+    occurredAt: `${new Date().toISOString().slice(0, 10)}T00:00:00`,
   });
 
   const [error, setError] = useState('');
@@ -18,6 +18,15 @@ export default function TransactionForm({ onSaved, dateFormat }) {
   const categories = CATEGORY_COLORS[form.type]
     ? Object.keys(CATEGORY_COLORS[form.type])
     : [];
+
+  useEffect(() => {
+    if (selectedDate) {
+      setForm((f) => ({
+        ...f,
+        occurredAt: `${selectedDate}T00:00:00`,
+      }));
+    }
+  }, [selectedDate]);
 
   useEffect(() => {
     if (!categories.includes(form.category)) {
@@ -54,7 +63,7 @@ export default function TransactionForm({ onSaved, dateFormat }) {
       amount,
       category: finalCategory,
       memo: form.memo?.trim() || '',
-      occurredAt: form.occurredAt || new Date().toISOString(),
+      occurredAt: form.occurredAt,
     };
 
     try {
@@ -66,7 +75,7 @@ export default function TransactionForm({ onSaved, dateFormat }) {
         category: '식비',
         customCategory: '',
         memo: '',
-        occurredAt: new Date().toISOString(),
+        occurredAt: `${selectedDate}T00:00:00`,
       });
 
       onSaved?.(res.data || payload);
