@@ -1,71 +1,66 @@
 .daily-table-container {
-    margin-top: 14px;
-    width: 100%;
+  width: 100%;
+  margin-top: 12px;
 }
 
 .daily-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 0.95rem;
 }
 
-.daily-table th {
-    padding-bottom: 8px;
-    font-size: 0.9rem;
-    border-bottom: 1px solid var(--color-border);
-    text-align: left;
-    color: var(--color-text-secondary);
+.daily-table thead th {
+  background: var(--color-bg-table-header);
+  padding: 10px 12px;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.daily-table td {
-    padding: 8px 6px;
-    border-top: 1px solid var(--color-border);
-    font-size: 0.9rem;
-    overflow-wrap: break-word;
+.daily-table tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
 }
 
-.daily-table th:nth-child(1),
-.daily-table td:nth-child(1) {
-    width: 12%;
+.daily-table tbody tr:hover {
+  background: var(--color-bg-table-hover);
 }
 
-.daily-table th:nth-child(2),
-.daily-table td:nth-child(2) {
-    width: 18%;
-}
-
-.daily-table th:nth-child(3),
-.daily-table td:nth-child(3) {
-    width: 35%;
-}
-
-.daily-table th:nth-child(4),
-.daily-table td:nth-child(4) {
-    width: 20%;
-    text-align: right;
-}
-
-.daily-table th:nth-child(5),
-.daily-table td:nth-child(5) {
-    width: 15%;
-    text-align: right;
+.daily-table button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
 }
 
 .daily-table-nav {
-    display: flex;
-    justify-content: center;
-    margin-top: 10px;
-    gap: 8px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .arrow-btn {
-    border-radius: 4px;
-    padding: 4px 6px;
-    cursor: pointer;
-    transition: opacity 0.2s;
+  width: 36px;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.arrow-btn:hover:not(:disabled) {
+  background-color: var(--color-secondary);
 }
 
 .arrow-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  opacity: 0.4;
+  cursor: default;
 }

@@ -6,18 +6,44 @@ export default function Settings() {
     const [autoApplyBudget, setAutoApplyBudget] = useState(false);
     const [numberFormat, setNumberFormat] = useState("comma");
     const [dateFormat, setDateFormat] = useState("YYYY.MM.DD");
+    const [themeMode, setThemeMode] = useState("system");
 
     useEffect(() => {
         const savedDefault = localStorage.getItem("settings-defaultBudget");
         const savedAuto = localStorage.getItem("settings-autoApplyBudget");
         const savedNum = localStorage.getItem("settings-numberFormat");
         const savedDate = localStorage.getItem("settings-dateFormat");
+        const savedTheme = localStorage.getItem("settings-themeMode");
 
         if (savedDefault) setDefaultBudget(savedDefault);
         if (savedAuto) setAutoApplyBudget(savedAuto === "true");
         if (savedNum) setNumberFormat(savedNum);
         if (savedDate) setDateFormat(savedDate);
+        if (savedTheme) setThemeMode(savedTheme);
     }, []);
+
+    useEffect(() => {
+        applyTheme(themeMode);
+    }, [themeMode]);
+
+    const applyTheme = (mode) => {
+        const root = document.documentElement;
+
+        if (mode === "light") {
+            root.setAttribute("data-theme", "light");
+        } else if (mode === "dark") {
+            root.setAttribute("data-theme", "dark");
+        } else {
+            const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            root.setAttribute("data-theme", systemDark ? "dark" : "light");
+        }
+    };
+
+    const saveThemeMode = (value) => {
+        setThemeMode(value);
+        localStorage.setItem("settings-themeMode", value);
+        applyTheme(value);
+    };
 
     const saveDefaultBudget = () => {
         if (!defaultBudget || Number(defaultBudget) < 0) {
@@ -114,10 +140,22 @@ export default function Settings() {
                 </select>
             </div>
 
+            <div className="settings-card">
+                <h3>테마 모드</h3>
+                <select
+                    value={themeMode}
+                    onChange={(e) => saveThemeMode(e.target.value)}
+                >
+                    <option value="light">라이트 모드</option>
+                    <option value="dark">다크 모드</option>
+                    <option value="system">시스템 설정 따르기</option>
+                </select>
+            </div>
+
             <div className="settings-card danger-zone">
                 <h3>로컬 데이터 초기화</h3>
                 <p className="desc danger-text">모든 로컬 데이터가 삭제됩니다.</p>
-                <button className="danger-btn" onClick={handleResetData}>
+                <button className="danger" onClick={handleResetData}>
                     로컬 데이터 초기화
                 </button>
             </div>

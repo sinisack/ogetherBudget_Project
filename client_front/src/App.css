@@ -1,20 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Trispace:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
-
 :root {
-  --color-bg-primary: #121212;
-  --color-bg-secondary: #1b1b1b;
-  --color-text-primary: #f5f5f5;
-  --color-text-secondary: #b3b3b3;
-  --color-border: #333;
-  --color-primary: #00c3e3;
+  --color-bg-primary: #f8f8f8;
+  --color-bg-secondary: #f5f5f5;
+  --color-bg-table-header: #e6e6e6;
+  --color-bg-table-hover: #dcdcdc;
+  --color-bg-bar: #d6d6d6;
+  --color-border: #b3b3b3;
+  --color-text-primary: #292929;
+  --color-text-secondary: #343434;
+  --color-primary: #1ac1dd;
   --color-secondary: #3aa8c1;
-  --color-success: #3cd070;
-  --color-danger: #de5246;
-  --color-danger-hover: #cd5c5c;
+  --color-success: #50c878;
+  --color-danger: #d9463e;
+  --color-danger-hover: #cc4e5c;
+  --shadow-primary: 0 2px 8px rgba(26, 193, 221, 0.15);
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.15);
+  --bg-overlay: rgba(255, 255, 255, 0.5);
 }
 
-* {
-  box-sizing: border-box;
+[data-theme="dark"] {
+  --color-bg-primary: #121212;
+  --color-bg-secondary: #1b1b1b;
+  --color-bg-table-header: #1f1f1f;
+  --color-bg-table-hover: #262626;
+  --color-bg-bar: #292929;
+  --color-border: #343434;
+  --color-text-primary: #d6d6d6;
+  --color-text-secondary: #b3b3b3;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
 }
 
 html,
@@ -48,17 +60,7 @@ body {
   border: 1px solid var(--color-border);
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.card h2,
-.card h3 {
-  margin-top: 0;
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 6px;
-  margin-bottom: 16px;
-  font-weight: 600;
-  color: var(--color-text-primary);
+  box-shadow: var(--shadow-primary);
 }
 
 button {
@@ -83,6 +85,15 @@ button.primary {
   color: var(--color-bg-primary);
 }
 
+button.danger {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+}
+
+button.danger:hover {
+  background-color: var(--color-danger-hover);
+}
+
 input,
 select {
   padding: 8px 12px;
@@ -97,41 +108,5 @@ input:focus,
 select:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 2px rgba(0, 195, 227, 0.25);
-}
-
-.link-button {
-  display: inline-block;
-  background-color: var(--color-primary);
-  color: var(--color-bg-primary);
-  padding: 8px 14px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s;
-}
-
-.link-button:hover {
-  background-color: var(--color-secondary);
-  color: var(--color-bg-primary);
-}
-
-@media (max-width: 1024px) {
-  .content-wrap {
-    padding-top: 88px;
-    padding-bottom: 72px;
-    padding-inline: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .content-wrap {
-    padding-top: 80px;
-    padding-bottom: 70px;
-  }
+  box-shadow: var(--shadow-primary);
 }

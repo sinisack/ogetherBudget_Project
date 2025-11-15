@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import http from '../api/http';
+import './CsvManagement.css';
 
 const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
   const [csvPreview, setCsvPreview] = useState([]);
@@ -138,10 +139,9 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
     const a = document.createElement('a');
 
     const now = new Date();
-    const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
-      2,
-      '0'
-    )}-${String(now.getDate()).padStart(2, '0')}`;
+    const dateStr = `${now.getFullYear()}-${String(
+      now.getMonth() + 1
+    ).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     a.download = `가계부_거래내역_${dateStr}.csv`;
     a.href = url;
@@ -150,10 +150,10 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
   };
 
   return (
-    <div style={{ marginTop: 16, borderTop: '1px dashed #ddd', paddingTop: 12 }}>
+    <div className="csv-container">
       <h3>CSV 데이터 관리</h3>
 
-      <div style={{ marginBottom: 16 }}>
+      <div className="csv-section">
         <button onClick={downloadCsv} disabled={transactions.length === 0}>
           거래 내역 CSV 다운로드 ({transactions.length}건)
         </button>
@@ -163,42 +163,19 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
       <input
         type="file"
         accept=".csv,text/csv"
-        onChange={(e) =>
-          e.target.files?.[0] && onCsvFile(e.target.files[0])
-        }
+        onChange={(e) => e.target.files?.[0] && onCsvFile(e.target.files[0])}
       />
 
       {csvPreview.length > 0 && (
-        <div style={{ marginTop: 12 }}>
+        <div className="csv-preview">
           <h4>미리보기 ({csvPreview.length}행)</h4>
-          <div
-            style={{
-              maxHeight: 200,
-              overflow: 'auto',
-              border: '1px solid #eee',
-              padding: 8,
-            }}
-          >
-            <table
-              style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '12px',
-              }}
-            >
+
+          <div className="csv-table-wrap">
+            <table className="csv-table">
               <thead>
                 <tr>
                   {Object.keys(csvPreview[0]).map((h) => (
-                    <th
-                      key={h}
-                      style={{
-                        textAlign: 'left',
-                        padding: 4,
-                        borderBottom: '1px solid #f0f0f0',
-                      }}
-                    >
-                      {h}
-                    </th>
+                    <th key={h}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -206,15 +183,7 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
                 {csvPreview.map((r, idx) => (
                   <tr key={idx}>
                     {Object.keys(r).map((k) => (
-                      <td
-                        key={k}
-                        style={{
-                          padding: 4,
-                          borderBottom: '1px solid #fafafa',
-                        }}
-                      >
-                        {r[k]}
-                      </td>
+                      <td key={k}>{r[k]}</td>
                     ))}
                   </tr>
                 ))}
@@ -222,14 +191,13 @@ const CsvManagement = ({ transactions, onImportComplete, setToast }) => {
             </table>
           </div>
 
-          <div style={{ marginTop: 8 }}>
+          <div className="csv-buttons">
             <button onClick={importCsv} disabled={importing}>
               {importing ? '업로드 중...' : '서버로 업로드 (행당 POST)'}
             </button>
-
             <button
               onClick={() => setCsvPreview([])}
-              style={{ marginLeft: 8 }}
+              className="cancel-btn"
               disabled={importing}
             >
               취소

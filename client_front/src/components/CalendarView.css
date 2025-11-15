@@ -25,7 +25,6 @@
 
 .calendar-cell {
   min-height: 80px;
-  background: var(--color-bg);
   border-radius: 8px;
   padding: 6px;
   cursor: pointer;
@@ -35,7 +34,9 @@
   align-items: center;
   justify-content: flex-start;
 
-  transition: background 0.2s, transform 0.15s;
+  transition: background 0.2s;
+  border: 2px solid transparent;
+  box-sizing: border-box;
 }
 
 .calendar-cell.empty {
@@ -45,7 +46,6 @@
 
 .calendar-cell.date-cell:hover {
   background: var(--color-bg-hover);
-  transform: scale(1.03);
 }
 
 .day-num {
@@ -78,8 +78,8 @@
 }
 
 .calendar-cell.selected {
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 8px rgba(0, 195, 227, 0.4);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-primary);
 }
 
 @media (max-width: 768px) {
