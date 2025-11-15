@@ -12,12 +12,56 @@ import http from './api/http';
 import './App.css';
 
 export default function App() {
-  const [authenticated, setAuthenticated] = useState(isLoggedIn());
+  const [authenticated, setAuthenticated] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    const handleStorageChange = () => setAuthenticated(isLoggedIn());
+    const savedTheme = localStorage.getItem("settings-themeMode") || "system";
+
+    const applyTheme = (mode) => {
+      const root = document.documentElement;
+
+      if (mode === "light") {
+        root.setAttribute("data-theme", "light");
+      } else if (mode === "dark") {
+        root.setAttribute("data-theme", "dark");
+      } else {
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        root.setAttribute("data-theme", systemDark ? "dark" : "light");
+      }
+    };
+
+    applyTheme(savedTheme);
+
+    const listener = (e) => {
+      const mode = localStorage.getItem("settings-themeMode") || "system";
+      if (mode === "system") applyTheme("system");
+    };
+
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", listener);
+
+    return () => {
+      window.matchMedia("(prefers-color-scheme: dark)").removeEventListener("change", listener);
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const ok = await isLoggedIn();
+      setAuthenticated(ok);
+    };
+    checkLogin();
+  }, []);
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const check = async () => {
+        const ok = await isLoggedIn();
+        setAuthenticated(ok);
+      };
+      check();
+    };
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);

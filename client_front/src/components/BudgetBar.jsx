@@ -2,13 +2,14 @@ import { useState, useMemo, useEffect } from 'react';
 import http from '../api/http';
 import BudgetSummary from './BudgetSummary';
 import DailyTransactionsTable from './DailyTransactionsTable';
-import { formatNumber } from '../utils/format';
+import { formatNumber, formatDate } from '../utils/format';
 import './BudgetBar.css';
 
 export default function BudgetBar({
   transactions = [],
   currentMonth,
   numberFormat,
+  dateFormat,
   selectedDate,
   dailyTransactions = [],
   onReload
@@ -59,7 +60,7 @@ export default function BudgetBar({
         month: ym,
         amount: value,
       });
-    } catch { }
+    } catch {}
   };
 
   const renderDailyFeed = () => {
@@ -67,7 +68,7 @@ export default function BudgetBar({
 
     return (
       <div className="daily-feed-area">
-        <h4>{selectedDate} 내역</h4>
+        <h4>{formatDate(selectedDate, dateFormat)} 내역</h4>   {/* ✅ 변경됨 */}
 
         {dailyTransactions.length === 0 ? (
           <p style={{ color: 'var(--color-text-secondary)', marginTop: 10 }}>

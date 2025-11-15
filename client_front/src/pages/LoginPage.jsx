@@ -17,10 +17,12 @@ export default function LoginPage({ onLoginSuccess }) {
       const response = await http.post('/auth/login', { email, password });
 
       if (response.status === 200 && response.data.ok) {
-        setTimeout(() => {
-          onLoginSuccess(true);
-          navigate('/');
-        }, 100);
+        if (response.data.token) {
+          localStorage.setItem("token", response.data.token);
+        }
+        await onLoginSuccess();
+        navigate('/');
+
       } else {
         setError('로그인에 실패했습니다. 서버 응답이 올바르지 않습니다.');
       }

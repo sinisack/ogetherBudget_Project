@@ -91,6 +91,7 @@ export default function Dashboard({
             transactions={monthlyTransactions}
             currentMonth={currentMonth}
             numberFormat={numberFormat}
+            dateFormat={dateFormat}
             selectedDate={selectedDate}
             dailyTransactions={dailyTransactions}
             onReload={onTransactionsChange}

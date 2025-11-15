@@ -10,7 +10,9 @@ export const isLoggedIn = async () => {
 };
 
 export const logout = async () => {
-  await http.post('/auth/logout');
+  try {
+    await http.post('/auth/logout');
+  } catch { }
 };
 
 export const requireAuth = async (navigate) => {

@@ -14,8 +14,8 @@ function Header({ authenticated, onLogout }) {
     navigate(path);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     onLogout?.();
     navigate('/login');
   };

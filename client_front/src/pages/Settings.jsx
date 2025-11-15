@@ -20,6 +20,8 @@ export default function Settings() {
         if (savedNum) setNumberFormat(savedNum);
         if (savedDate) setDateFormat(savedDate);
         if (savedTheme) setThemeMode(savedTheme);
+
+        applyTheme(savedTheme || "system");
     }, []);
 
     useEffect(() => {
