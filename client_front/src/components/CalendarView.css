@@ -70,11 +70,12 @@
   text-align: center !important;
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-danger);
-  border-radius: 50%;
+.amount-expense {
+  color: var(--color-danger);
+}
+
+.amount-income {
+  color: var(--color-success);
 }
 
 .calendar-cell.selected {

@@ -1,4 +1,4 @@
-import { formatNumber, formatDate } from '../utils/format';
+import { formatNumber } from '../utils/format';
 import './CalendarView.css';
 
 export default function CalendarView({
@@ -18,18 +18,28 @@ export default function CalendarView({
 
   const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const dailyTotals = transactions.reduce((acc, t) => {
+  const dailyStats = transactions.reduce((acc, t) => {
     if (!t?.occurredAt) return acc;
+
     const d = new Date(t.occurredAt);
     if (d.getFullYear() !== year || d.getMonth() !== month) return acc;
 
     const day = d.getDate();
-    acc[day] = (acc[day] || 0) + (t.type === 'EXPENSE' ? t.amount : 0);
+
+    if (!acc[day]) {
+      acc[day] = { expense: 0, income: 0 };
+    }
+
+    if (t.type === 'EXPENSE') acc[day].expense += t.amount;
+    if (t.type === 'INCOME') acc[day].income += t.amount;
+
     return acc;
   }, {});
 
   const handleSelect = (day) => {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(
+      day
+    ).padStart(2, '0')}`;
     onDateSelect?.(dateStr);
   };
 
@@ -40,7 +50,8 @@ export default function CalendarView({
   }
 
   for (let d = 1; d <= daysInMonth; d++) {
-    const total = dailyTotals[d] || 0;
+    const stat = dailyStats[d] || { expense: 0, income: 0 };
+
     const isSelected =
       selectedDate &&
       new Date(selectedDate).getFullYear() === year &&
@@ -54,12 +65,20 @@ export default function CalendarView({
         onClick={() => handleSelect(d)}
       >
         <span className="day-num">{d}</span>
-        {total > 0 && (
-          <div className="spending-info">
-            <span className="dot" />
-            <span className="amount">{formatNumber(total, numberFormat)}</span>
-          </div>
-        )}
+
+        <div className="spending-info">
+          {stat.expense > 0 && (
+            <span className="amount amount-expense">
+              {formatNumber(stat.expense, numberFormat)}
+            </span>
+          )}
+
+          {stat.income > 0 && (
+            <span className="amount amount-income">
+              {formatNumber(stat.income, numberFormat)}
+            </span>
+          )}
+        </div>
       </div>
     );
   }
