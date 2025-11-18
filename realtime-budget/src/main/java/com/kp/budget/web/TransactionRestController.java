@@ -41,7 +41,7 @@ public class TransactionRestController {
         return saved;
     }
 
-    // 내역 수정 (추가된 부분)
+    // 내역 수정
     @PutMapping("/{id}")
     public Transaction update(@PathVariable Long id,
                               @RequestBody TransactionDto dto) {
@@ -59,7 +59,7 @@ public class TransactionRestController {
         ws.broadcastTransactionsChanged();
     }
 
-    // 예산 80% 초과 알림 체크
+    // 예산 초과 알림 체크
     private void checkAndAlert() {
         YearMonth ym = YearMonth.now();
         BigDecimal budget = budgetService.current(ym);

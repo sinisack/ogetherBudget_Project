@@ -15,14 +15,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/queue"); // queue는 /user 전용 응답
         config.setApplicationDestinationPrefixes("/app");
-        config.setUserDestinationPrefix("/user"); // ★ 유저 전용
+        config.setUserDestinationPrefix("/user"); // 유저 전용
     }
 
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(new JwtHandshakeInterceptor(jwtProvider))  // ★ 주입 필요 (생성자에 넣도록 구성)
+                .addInterceptors(new JwtHandshakeInterceptor(jwtProvider))  // 주입 필요 (생성자에 넣도록 구성)
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }

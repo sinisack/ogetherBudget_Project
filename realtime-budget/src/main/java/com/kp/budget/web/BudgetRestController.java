@@ -21,7 +21,9 @@ public class BudgetRestController {
     }
 
 
+    
     @PostMapping
+    // 예산 생성 또는 수정
     public Budget upsert(@RequestBody BudgetDto dto) {
         Budget saved = budgetService.upsert(dto.year(), dto.month(), dto.amount());
         ws.broadcastTransactionsChanged(); // 예산 바뀌면 그래프/잔액 재계산 유도

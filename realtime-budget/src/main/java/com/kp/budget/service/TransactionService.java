@@ -29,23 +29,29 @@ public class TransactionService {
         this.auth = auth;
     }
 
+    // 모든 내역 조회
     public List<Transaction> findAll() {
         Long uid = auth.currentUserId();
         return repo.findAllByOwnerId(uid);
     }
 
+    // 내역 생성
     public Transaction create(Transaction t) {
         Long uid = auth.currentUserId();
-        User ownerRef = em.getReference(User.class, uid); // ★ 권장: 전체 유저 조회 없이 레퍼런스만
+        User ownerRef = em.getReference(User.class, uid); // 전체 유저 조회 없이 레퍼런스만(JPA 프록시)
+        /**
+         * getReference()는 DB SELECT를 날리지 않음.
+         * ➡ 대신 "프록시(User stub)"만 생성해서 참조함.
+         * ➡ INSERT 시 필요한 user_id 값만 있으면 되므로 SELECT가 필요 없음.
+         *
+         *
+         * “예산/거래 생성할 때 User를 다시 조회하지 않고도 owner 설정이 가능하다.”
+         */
         t.setOwner(ownerRef);
         return repo.save(t);
     }
 
-    /**
-     * 내역 수정 (부분 수정 지원)
-     * - dto 에서 null이 아닌 필드만 반영
-     * - type 은 enum 이라고 가정하고 String -> Transaction.Type 변환
-     */
+    // 내역 수정
     public Transaction update(Long id, TransactionDto dto) {
         Long uid = auth.currentUserId();
         Transaction t = repo.findByIdAndOwnerId(id, uid).orElseThrow();
@@ -60,12 +66,14 @@ public class TransactionService {
         return t;
     }
 
+    // 내역 삭제
     public void delete(Long id) {
         Long uid = auth.currentUserId();
         Transaction t = repo.findByIdAndOwnerId(id, uid).orElseThrow();
         repo.delete(t);
     }
 
+    // 예산 초과 알림 체크
     public BigDecimal monthBalance(YearMonth ym) {
         Long uid = auth.currentUserId();
         var from = ym.atDay(1).atStartOfDay();

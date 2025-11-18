@@ -32,6 +32,7 @@ public class AuthController {
         this.jwt = jwt;
     }
 
+    // 회원 가입 프론트 요청 -> 이메일, 패스워드를 전달받음
     public record SignupReq(@Email @NotBlank String email, @NotBlank String password) {}
     public record LoginReq(@Email @NotBlank String email, @NotBlank String password) {}
 
@@ -53,8 +54,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginReq req, HttpServletResponse res) {
         try {
+            //AuthenticationManager를 사용해 인증 요청
             Authentication auth = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(req.email(), req.password()));
+
             String subject = auth.getName();
             String safeSubject = subject == null ? "null" : subject;
             System.out.println("DEBUG: Auth Subject Name (Email) is: " + safeSubject);

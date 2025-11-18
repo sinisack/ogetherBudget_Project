@@ -43,9 +43,9 @@ dependencies {
 
 
 // --- h2 ---
-	runtimeOnly 'com.h2database:h2'
+	//runtimeOnly 'com.h2database:h2'
 // MySQL 전환 시 아래로 교체
- runtimeOnly 'com.mysql:mysql-connector-j'
+ 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

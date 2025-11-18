@@ -21,6 +21,7 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
+    // BCrypt 알고리즘으로 회원가입 비밀번호를 암호화해서 DB에 저장
     BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -41,6 +42,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+                // JWT 유효성 검사
                 .addFilterBefore(new JwtAuthFilter(jwt, uds),
                         org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
@@ -48,6 +50,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    //로그인할 때 사용하는 인증 관리자
+    /**
+     * Spring Security의 AuthenticationManager가
+     * email/password 를 검증한다.
+     *
+     * 내부적으로 CustomUserDetailsService.loadUserByUsername() 호출됨.
+     * 성공하면 유저 정보를 반환하고 JWT 생성
+     */
     AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
         return cfg.getAuthenticationManager();
     }
