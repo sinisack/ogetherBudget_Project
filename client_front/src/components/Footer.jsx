@@ -17,7 +17,7 @@ export default function Footer() {
       </div>
 
       <div className="footer-right">
-        <span>© 2025 WIZLET All rights reserved.</span>
+        <span>© 2025 같이가계 All rights reserved.</span>
         <img src={fbIcon} alt="Facebook" className="footer-icon" />
         <img src={xIcon} alt="X (Twitter)" className="footer-icon" />
         <img src={instaIcon} alt="Instagram" className="footer-icon" />

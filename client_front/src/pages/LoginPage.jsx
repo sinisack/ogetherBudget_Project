@@ -35,7 +35,7 @@ export default function LoginPage({ onLoginSuccess }) {
   return (
     <div className="auth-container">
       <div className="auth-box">
-        <h2 className="auth-title">WIZLET</h2>
+        <h2 className="auth-title">같이가계</h2>
         <p className="auth-subtitle">
           지금 입력하면, 구성원이 바로 본다. 반복 지출은 자동으로, 예산은 실시간으로
         </p>

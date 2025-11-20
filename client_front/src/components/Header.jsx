@@ -23,7 +23,7 @@ function Header({ authenticated, onLogout }) {
   return (
     <header className="header-container">
       <div className="logo-section">
-        <Link to="/" className="logo-link">WIZLET</Link>
+        <Link to="/" className="logo-link">같이가계</Link>
       </div>
 
       <nav className="nav-menu">
