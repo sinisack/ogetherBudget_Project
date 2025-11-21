@@ -2,7 +2,7 @@
     "rewrites": [
         {
             "source": "/:match*",
-            "destination": "https://ogetherbudget-project.onrender.com/:match*"
+            "destination": "https://ogetherbudget-project-ram1.onrender.com/:match*"
         }
     ]
 }
