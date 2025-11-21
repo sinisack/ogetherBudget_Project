@@ -33,14 +33,16 @@ export default function Charts({ transactions = [], numberFormat }) {
         map[key] = (map[key] || 0) + t.amount;
       });
 
-    return Object.entries(map).map(([name, value]) => ({
-      name,
-      value,
-      icon: ICON_MAP[name] || ICON_MAP['기타'],
-      color:
-        CATEGORY_COLORS[viewType][name] ||
-        CATEGORY_COLORS[viewType]['기타'],
-    }));
+    return Object.entries(map)
+      .map(([name, value]) => ({
+        name,
+        value,
+        icon: ICON_MAP[name] || ICON_MAP['기타'],
+        color:
+          CATEGORY_COLORS[viewType][name] ||
+          CATEGORY_COLORS[viewType]['기타'],
+      }))
+      .sort((a, b) => b.value - a.value);
   }, [validTransactions, viewType]);
 
   const totalValue = byCategory.reduce((sum, c) => sum + c.value, 0);
@@ -77,6 +79,7 @@ export default function Charts({ transactions = [], numberFormat }) {
                   outerRadius={110}
                   innerRadius={60}
                   paddingAngle={2}
+                  activeShape={null}
                 >
                   {byCategory.map((entry, i) => (
                     <Cell key={i} fill={entry.color} />
