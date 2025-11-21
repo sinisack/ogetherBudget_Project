@@ -278,11 +278,3 @@ mode === 'development'
 
 - 개발 모드 = Proxy 필요 (CORS 해결)
 - 운영 모드 = Proxy 불필요 (정적 배포 환경)
-
-# 10. 배포 후 체크리스트
-
-* [ ] Render Backend URL 정상 동작
-* [ ] `.env.production`의 `VITE_API_BASE_URL` 검증
-* [ ] Vercel 환경 변수 동일하게 설정
-* [ ] WebSocket `/ws` 정상 연결
-* [ ] Render CORS에 Vercel 도메인 허용
