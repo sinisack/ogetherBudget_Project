@@ -28,114 +28,138 @@
 * **Vite**: 7.1.7
 * **ESLint**: 9.36.0
 
-# 2. Backend 설정
+2. application.properties 설정
 
-## 2-1. application.properties
-
-> 📁 **파일 경로**: `/src/main/resources/application.properties`
+📁 파일 경로: /src/main/resources/application.properties
 
 아래 설정들이 환경 변수 기반으로 포함되어야 합니다:
 
-```
 # --- MySQL ---
 spring.datasource.url=${SPRING_DATASOURCE_URL}
 spring.datasource.username=${SPRING_DATASOURCE_USERNAME}
 spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 spring.datasource.driver-class-name=${SPRING_DATASOURCE_DRIVER-CLASS-NAME}
-```
 
-* MySQL(Aiven) DB 접속 정보
-* JPA 설정
-* JWT Secret Key
-* WebSocket/STOMP 설정
-* 기타 서버 환경 변수
+3. Aiven MySQL 설정
 
-# 3. Aiven MySQL 배포 및 연결
+Aiven은 MySQL을 포함한 다양한 데이터베이스 서비스를 클라우드에서 쉽게 관리할 수 있게 해주는 플랫폼입니다. 아래는 Aiven에 MySQL을 배포하고, Render 애플리케이션과 연결하는 단계입니다.
 
-## 3-1. Aiven MySQL 배포
+3.1 Aiven 계정 생성
 
-1. **Aiven 계정 생성**
-   [https://aiven.io](https://aiven.io) 에서 회원가입
+https://aiven.io/에
+ 방문하여 계정을 생성합니다.
 
-2. **MySQL 서비스 생성**
+3.2 MySQL 서비스 생성
 
-   * Dashboard → **Create new service**
-   * Database 선택: **MySQL**
-   * 설정:
+Aiven 대시보드에 로그인한 후, "Create new service"에서 MySQL을 선택합니다.
 
-     * **Service Tier**: Free 가능
-     * **Cloud Region**: 예: North America
-     * **Service Name**: 예: `mysql-budget`
-   * **Create Service** 클릭
+필요한 옵션을 설정합니다.
 
-3. **MySQL 연결 정보 확인**
+Service Tier: 원하는 서비스 계층을 선택합니다 (예: Free).
 
-   * Service → **Connection Information**
-   * Render 환경 변수에 넣어야 하는 값:
+Cloud: 데이터베이스를 배포할 지역을 선택합니다 (예: North America).
 
-     * **Service URI**
-     * **Username**
-     * **Password**
-     * **Host**
-     * **Port**
-     * **Database (defaultdb)**
+Service Basics: 서비스 이름을 작성합니다 (예: mysql-budget).
 
-4. **Aiven MySQL 연결 테스트 (선택)**
+Create service를 클릭하면 서비스가 생성됩니다.
 
-   ```bash
-   mysql -h mysql-budget-sin10.i.aivencloud.com -P 14613 -u avnadmin -p
-   ```
+3.3 Aiven MySQL 연결 정보 확인
 
-# 4. Render Backend 배포
+MySQL 서비스 생성 후 Connection Information에서 MySQL 데이터베이스에 연결할 정보를 확인할 수 있습니다.
 
-## 4-1. Render 배포 절차
+Service URI: 데이터베이스에 연결하는 전체 URL
 
-1. **Render 계정 생성**
-   [https://render.com](https://render.com)
+Username: 데이터베이스에 접근하기 위한 사용자 이름
 
-2. **Web Service 생성**
+Password: 사용자 이름에 대응하는 비밀번호
 
-   * **Create new Service → Web Service**
-   * GitHub 저장소 연결
+Host: 데이터베이스 서버의 호스트 주소
 
-3. **서비스 설정**
+Port: 데이터베이스 서버에 연결하는 포트 번호
 
-   * **Service Type**: Web Service
-   * **Name**: 예) `ogetherBudget_Project`
-   * **Language/Runtime**: Docker
-   * **Branch**: main
-   * **Region**: Oregon (US West)
-   * **Root Directory**:
+Database Name: 연결할 데이터베이스의 이름(기본적으로 defaultdb)
 
-     ```
-     /project
-     ├── realtime-budget    (backend)
-     └── client_front       (frontend)
-     ```
+잠시 창을 그대로 둔 상태에서 Render 배포로 넘어가겠습니다.
 
-     → Root Directory에 `realtime-budget` 입력
-   * **Instance Type**: Free
+4. Render 배포
+4.1 Render 계정 생성
 
-## 4-2. Render 환경 변수(Aiven MySQL 연결)
+https://render.com/
+ 사이트에 방문하여 계정을 만듭니다.
 
-> Aiven의 URL은 `mysql://`로 시작하지만, Spring JDBC는 `jdbc:mysql://` 형식을 필요로 합니다.
-> 반드시 변환하여 넣어야 합니다.
+이미 계정이 있다면 로그인합니다.
 
-입력해야 할 환경 변수:
+4.2 새 웹 서비스 생성
 
-```
-SPRING_DATASOURCE_URL=<jdbc:mysql://HOST:PORT/DATABASE>
-SPRING_DATASOURCE_USERNAME=<AIVEN-USERNAME>
-SPRING_DATASOURCE_PASSWORD=<AIVEN-PASSWORD>
-SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
-```
+Render 대시보드에 로그인 후, "Create new Service" 버튼을 클릭합니다.
 
-## 4-3. 배포
+Web Service를 선택하여 새 서비스를 만듭니다.
 
-* 모든 설정 완료 → **Deploy Web Service**
-* 성공 시 Render에서 URL 발급
-  예: `https://yourapp.onrender.com`
+4.3 GitHub 저장소 연결
 
+Repository 항목에서 GitHub를 선택하여 배포할 프로젝트 저장소를 연결합니다.
+(예: ogetherBudget_Project)
+
+4.4 애플리케이션 설정
+
+Select a service type: 서비스 타입을 설정합니다 (예: Web Service)
+
+Name: 웹 서비스의 이름을 설정합니다 (예: ogetherBudget_Project)
+
+Language: 서비스의 런타임 환경을 선택합니다 (예: Docker)
+
+Branch: 브랜치 이름을 설정합니다 (예: main)
+
+Region: 배포할 지역을 선택합니다 (예: Oregon (US West))
+
+Root Directory Optional
+
+Render는 기본적으로 레포지토리 최상단(/project)에서 실행하려고 합니다.
+
+예시 구조:
+
+/project
+ ├─ realtime-budget (backend)
+ └─ client_front (frontend)
+
+
+하지만 우리의 백엔드는 /realtime-budget 폴더 안에 있음으로 "realtime-budget"을 입력해 줘야 합니다.
+
+Instance Type
+
+Instance Type: 필요한 리소스를 선택합니다 (예: Free)
+
+Environment Variables
+
+MySQL 데이터베이스와 연결하기 위해 환경 변수 설정입니다.
+
+위에 Aiven MySQL 연결 정보를 확인해 Value에 실제 값을 넣어줍니다.
+
+Aiven URL은 mysql://...로 시작합니다.
+하지만 MySQL는 jdbc:mysql://로 시작하는 URL만 인식하므로,
+jdbc:를 붙이고 유저와 비밀번호는 URL에서 제거합니다.
+
+예시 변환:
+mysql://(사용자이름):(비밀번호)@(호스트주소):(포트)/(데이터베이스이름)?ssl-mode=REQUIRED
+→
+jdbc:mysql://호스트주소:포트번호/데이터베이스이름?ssl-mode=REQUIRED
+
+Environment Variable Key/Value 표
+Key	Value
+SPRING_DATASOURCE_URL	AIVEN-URL
+SPRING_DATASOURCE_USERNAME	AIVEN-USERNAME
+SPRING_DATASOURCE_PASSWORD	AIVEN-PASSWORD
+SPRING_DATASOURCE_DRIVER-CLASS-NAME	com.mysql.cj.jdbc.Driver
+
+DRIVER-CLASS-NAME: 기본적으로 com.mysql.cj.jdbc.Driver를 사용합니다.
+
+Advanced는 건너뛰어도 됩니다.
+
+5. 배포 시작
+
+모든 설정을 완료한 후, Deploy Web Service 버튼을 클릭하면 Render가 애플리케이션을 빌드하고 배포를 시작합니다.
+
+배포가 완료되면, 서비스 URL을 제공받습니다.
 # 5. Frontend 설치 & 실행
 
 ## 5-1. 패키지 설치
