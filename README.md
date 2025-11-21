@@ -1,8 +1,7 @@
 # 프로젝트 환경 및 실행 가이드
 
 **실시간 협업 가계부 같이가계**
-
-
+<br><br><br><br>
 # 1. 프로젝트 버전 정보
 
 ## 1-1. Backend
@@ -28,8 +27,7 @@
 * **React**: 19.1.1
 * **Vite**: 7.1.7
 * **ESLint**: 9.36.0
-
-
+<br><br><br><br>
 # 2. application.properties 설정
 
 > 📁 파일 경로: /src/main/resources/application.properties
@@ -45,8 +43,7 @@ spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 spring.datasource.driver-class-name=${SPRING_DATASOURCE_DRIVER-CLASS-NAME}
 
 ```
-
-
+<br><br><br><br>
 # 3. Aiven MySQL 설정
 
 **Aiven**은 MySQL을 포함한 다양한 데이터베이스 서비스를 클라우드에서 쉽게 관리할 수 있게 해주는 플랫폼입니다. 아래는 **Aiven**에 MySQL을 배포하고, **Render** 애플리케이션과 연결하는 단계입니다.
@@ -76,8 +73,7 @@ MySQL 서비스 생성 후 **Connection Information**에서 MySQL 데이터베�
 - **Database Name**: 연결할 데이터베이스의 이름(기본적으로 defaultdb)
 
 잠시 창을 그대로 둔 상태에서 Render 배포로 넘어가겠습니다.
-
-
+<br><br><br><br>
 # 4. Render 배포
 
 ## 4.1 Render 계정 생성
@@ -156,14 +152,12 @@ jdbc:mysql://호스트주소:포트번호/데이터베이스이름?ssl-mode=REQU
 
 - **DRIVER-CLASS-NAME**: 기본적으로 `com.mysql.cj.jdbc.Driver`를 사용합니다.
 - **Advanced**는 건너뛰어도 됩니다.
-
-
+<br><br><br><br>
 # 5. 배포 시작
 
 - 모든 설정을 완료한 후, **Deploy Web Service** 버튼을 클릭하면 Render가 애플리케이션을 빌드하고 배포를 시작합니다.
 - 배포가 완료되면, 서비스 URL을 제공받습니다.
-
-
+<br><br><br><br>
 # 6. 로컬 개발 환경 설정
 
 ## 6.1 패키지 설치
@@ -193,8 +187,7 @@ npm run dev
 - 이 단계에서는 빌드를 수행할 필요가 없습니다.
 - 개발 모드에서는 `vite.config.js`의 proxy 설정이 자동 적용됩니다.
 - 백엔드 API와 웹소켓도 프록시에 포함되므로 CORS 문제가 발생하지 않습니다.
-
-
+<br><br><br><br>
 # 7. 운영 빌드(로컬 테스트용)
 
 운영 환경과 동일한 결과물을 로컬에서 테스트하고 싶은 경우에만 사용합니다.
@@ -213,8 +206,7 @@ npm run preview
 
 - 운영 빌드가 실제로 어떻게 동작하는지 확인할 때만 사용하는 과정입니다.
 - Vercel은 배포 시 자체적으로 빌드를 수행하므로 배포 과정에서는 직접 빌드할 필요가 없습니다.
-
-
+<br><br><br><br>
 # 8. Vercel 배포
 
 ## 8.1 프로젝트 Import
@@ -241,8 +233,7 @@ VITE_API_BASE_URL=https://your-backend.onrender.com
 이후 화면 하단의 버튼을 눌러 **Production Deployment** 목록으로 이동한 뒤,
 
 **Domains** 최상단에 표시된 도메인을 클릭하면 배포된 프론트엔드에 접속할 수 있습니다.
-
-
+<br><br><br><br>
 # 9. 구조가 이렇게 설계된 이유
 
 ## 9.1 Vite가 `.env.*` 파일을 분리하는 이유
