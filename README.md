@@ -2,6 +2,7 @@
 
 **실시간 협업 가계부 같이가계**
 
+
 # 1. 프로젝트 버전 정보
 
 ## 1-1. Backend
@@ -28,6 +29,7 @@
 * **Vite**: 7.1.7
 * **ESLint**: 9.36.0
 
+
 # 2. application.properties 설정
 
 > 📁 파일 경로: /src/main/resources/application.properties
@@ -43,6 +45,7 @@ spring.datasource.password=${SPRING_DATASOURCE_PASSWORD}
 spring.datasource.driver-class-name=${SPRING_DATASOURCE_DRIVER-CLASS-NAME}
 
 ```
+
 
 # 3. Aiven MySQL 설정
 
@@ -73,6 +76,7 @@ MySQL 서비스 생성 후 **Connection Information**에서 MySQL 데이터베�
 - **Database Name**: 연결할 데이터베이스의 이름(기본적으로 defaultdb)
 
 잠시 창을 그대로 둔 상태에서 Render 배포로 넘어가겠습니다.
+
 
 # 4. Render 배포
 
@@ -153,14 +157,16 @@ jdbc:mysql://호스트주소:포트번호/데이터베이스이름?ssl-mode=REQU
 - **DRIVER-CLASS-NAME**: 기본적으로 `com.mysql.cj.jdbc.Driver`를 사용합니다.
 - **Advanced**는 건너뛰어도 됩니다.
 
+
 # 5. 배포 시작
 
 - 모든 설정을 완료한 후, **Deploy Web Service** 버튼을 클릭하면 Render가 애플리케이션을 빌드하고 배포를 시작합니다.
 - 배포가 완료되면, 서비스 URL을 제공받습니다.
 
-# **6. 로컬 개발 환경 설정**
 
-## **6.1 패키지 설치**
+# 6. 로컬 개발 환경 설정
+
+## 6.1 패키지 설치
 
 아래 명령으로 프론트엔드 의존성을 설치합니다.
 
@@ -168,7 +174,7 @@ jdbc:mysql://호스트주소:포트번호/데이터베이스이름?ssl-mode=REQU
 npm install
 ```
 
-## **6.2 환경 변수 설정 (.env.development 자동 로드)**
+## 6.2 환경 변수 설정 (.env.development 자동 로드)
 
 Vite는 `mode=development`일 때 최상위 디렉토리의 `.env.development` 파일을 자동으로 인식합니다.
 
@@ -178,7 +184,7 @@ Vite는 `mode=development`일 때 최상위 디렉토리의 `.env.development` �
 VITE_API_BASE_URL=http://localhost:8080
 ```
 
-## **6.3 개발 서버 실행**
+## 6.3 개발 서버 실행
 
 ```
 npm run dev
@@ -188,17 +194,18 @@ npm run dev
 - 개발 모드에서는 `vite.config.js`의 proxy 설정이 자동 적용됩니다.
 - 백엔드 API와 웹소켓도 프록시에 포함되므로 CORS 문제가 발생하지 않습니다.
 
-# **7. 운영 빌드(로컬 테스트용)**
+
+# 7. 운영 빌드(로컬 테스트용)
 
 운영 환경과 동일한 결과물을 로컬에서 테스트하고 싶은 경우에만 사용합니다.
 
-## **7.1 빌드**
+## 7.1 빌드
 
 ```
 npm run build
 ```
 
-## **7.2 빌드 결과 미리보기**
+## 7.2 빌드 결과 미리보기
 
 ```
 npm run preview
@@ -207,9 +214,10 @@ npm run preview
 - 운영 빌드가 실제로 어떻게 동작하는지 확인할 때만 사용하는 과정입니다.
 - Vercel은 배포 시 자체적으로 빌드를 수행하므로 배포 과정에서는 직접 빌드할 필요가 없습니다.
 
-# **8. Vercel 배포**
 
-## **8.1 프로젝트 Import**
+# 8. Vercel 배포
+
+## 8.1 프로젝트 Import
 
 Vercel 메인 화면에서:
 
@@ -226,7 +234,7 @@ VITE_API_BASE_URL=https://your-backend.onrender.com
 
 이후 Deploy 버튼을 클릭합니다.
 
-## **8.2 배포 진행**
+## 8.2 배포 진행
 
 "Deploy" 버튼을 클릭하면 자동으로 빌드와 배포가 진행되며, 완료 후 Vercel에서 기본 도메인이 생성됩니다. 
 
@@ -234,9 +242,10 @@ VITE_API_BASE_URL=https://your-backend.onrender.com
 
 **Domains** 최상단에 표시된 도메인을 클릭하면 배포된 프론트엔드에 접속할 수 있습니다.
 
-# **9. 구조가 이렇게 설계된 이유**
 
-## **9.1 Vite가 `.env.*` 파일을 분리하는 이유**
+# 9. 구조가 이렇게 설계된 이유
+
+## 9.1 Vite가 `.env.*` 파일을 분리하는 이유
 
 Vite는 빌드 시점에 모드별 환경 변수를 자동으로 로드합니다.
 
@@ -250,7 +259,7 @@ Vite는 빌드 시점에 모드별 환경 변수를 자동으로 로드합니다
 - 로컬 개발과 운영 서버의 API 주소를 자동으로 구분할 수 있고
 - `VITE_` prefix가 붙은 변수만 브라우저에 노출되도록 제한되어 보안적으로도 안전합니다.
 
-## **9.2 왜 vite.config.js에서 env를 불러와야 하는가?**
+## 9.2 왜 vite.config.js에서 env를 불러와야 하는가?
 
 핵심 이유는 Proxy 설정을 개발 모드에서만 사용하기 위해서입니다.
 
